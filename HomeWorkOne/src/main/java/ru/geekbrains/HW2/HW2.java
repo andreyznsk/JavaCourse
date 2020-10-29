@@ -17,8 +17,8 @@ public class HW2 {
         }
 
     public static boolean CheckZero(int a){ //Пункт 6
-        if (a < 0) return true;
-        else return false;
+         return a<0;
+
         }
 
     public static void PrintHello (String name){ //Пункт 7
