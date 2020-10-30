@@ -27,12 +27,12 @@ public class HW2 {
     }
     public static void main(String[] args) {
         boolean bul = true;
-        byte a_byte = 120;
-        short b_short = 1200;
-        int c_int = 6553500;
-        long d_long = 10000000000L;
-        float e_float = 1.0f;
-        double f_double = 1000.123456;
+        byte aByte = 120;
+        short bShort = 1200;
+        int cInt = 6553500;
+        long dLong = 10000000000L;
+        float eFloat = 1.0f;
+        double fDouble = 1000.123456;
 
         char chr = 'i';
 
