@@ -3,60 +3,98 @@ package ru.geekbrains.HW2;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 
 import java.util.Random;
+import java.util.Scanner;
 
 public class Lession3 {
+    public static Scanner sc = new Scanner(System.in);
+    private static Random random = new Random();
 
+    public static int getNumberFromScanner(String message, int min, int max) {// запрашивает у пользователя число в заданных пределах
+        int x;
+        do {
+            System.out.println(message);
+            x = sc.nextInt();
+        } while (x < min || x > max);
+        return x;
+    }
+    public static void  printArrayWard(String[] wrd){// метод печати массива строк. Нужно доработать динамический перенос строки
+        for (int i = 0; i < wrd.length; i++) {
+            System.out.print(i + " - " + wrd[i] + ";");
+            if(i==(10)) System.out.println();//TODO
+            if(i==(20)) System.out.println();//TODO
 
-    public static void printArry(int[] array){
-        for (int j : array) {
-            System.out.print(j + " ");
         }
         System.out.println();
     }
+    public static void GuessTheWorld(){//Метод угадай слово
+        //Random random = new Random();
+        String userWord;
+        String[] words = {"apple", "orange", "lemon", "banana", "apricot", "avocado", "broccoli", "carrot", "cherry", "garlic", "grape", "melon", "leak", "kiwi", "mango", "mushroom", "nut", "olive", "pea", "peanut", "pear", "pepper", "pineapple", "pumpkin", "potato"};
+        String pcWord = words[random.nextInt(words.length)-1];//Запоминаем случайное слово
+        //String pcWord = "123";
+        printArrayWard(words); // Вывод всего набора слов
+        do {
 
-    public static void print2dArr(int[][] matrix){
-        for (int i = 0; i < matrix.length; i++) {
-            int[] a = matrix[i];
-            printArry(a);
-        }
+            System.out.print("Введите слово: ");
+            //System.out.println(pcWord);
+            userWord = sc.next();
+
+            if (userWord.equals(pcWord)) {
+                System.out.println("Поздравляем! Вы выиграли");
+                break;
+            }
+            if (pcWord.charAt(0)==userWord.charAt(0)) {//цикл проверки введеных букв
+                System.out.print("Вы почти угадали: ");
+                int i = 0;
+                        while(pcWord.charAt(i)==userWord.charAt(i)) {
+                            System.out.print(pcWord.charAt(i));
+                            i++;
+                            if(i>(pcWord.length()-1)||i>(userWord.length()-1)) break;
+                        }
+                for (; i < 15; i++) System.out.print("#");
+
+                System.out.println();
+            }
+
+        } while (!pcWord.equals(userWord));
+
     }
+    public static void GuessNumberGame(){
 
-    public static int sumarry(int[] a){
-        int sum = 0;
-        for (int i = 0; i < a.length; i++) {
-                    sum+=a[i];
-        }
-        return sum;
+        int playerNumber;
+
+        int i = 0;
+        int arMenu = 0;
+        do {
+            int pcNumber = random.nextInt(9); // ввели случайное число
+            for (i = 0; i < 3; i++) {
+                playerNumber = getNumberFromScanner("Угадай число от 0 до 9: ", 0, 9);
+                if (playerNumber == pcNumber) {
+                    System.out.println("Вы выиграли");
+                    break;
+                } else if (playerNumber > pcNumber) System.out.println("Ваше число больше");
+                else System.out.println("Ваше число меньше");
+            }
+            if (i == 3) System.out.printf("Вы проиграли! Правильное число: %d\n", pcNumber);
+            arMenu = getNumberFromScanner("1 - Играть снова\n0 - Выйти", 0, 1);
+        } while (arMenu != 0);
     }
-
-    public static void printData(int age, String name, double avag) {
-        System.out.printf("Age: %5d, Name: %1s, Avage: %1f\n", age, name, avag);
-
-    }
-
-    public static void StringEquality(String string) {
-
-    }
-
 
     public static void main(String[] args) {
-        /*int[] arry = {1,2,3,4,6,56};
-        int[][] array2d = {{1,3,4,5,},{4,5,6,7},{8,9,10,11}};
-        printArry(arry);
-        print2dArr(array2d);
-        System.out.println("Сумма массива = " + sumarry(arry));*/
-        // Генератор случайных чисел
-        /*Random random = new Random();
-        for (int i = 0; i < 50; i++) {
-            int randInt = random.nextInt(10);// Присвает рандомное число в диапазоне от 0 до 10
-            System.out.println("Следующий значение:" + randInt);
-        }*/
-        printData(36, "Andreyz", 34.123);
-        String myName = "Andreyz";
-        String myName2 = "Andreyz";
-        System.out.println(myName.equals(myName2));
-
-
+      int arMenu = 0;
+        do{
+           arMenu = getNumberFromScanner("Меню\n1 - Игра угадай число\n2 - Игра угадай слово\n0 - Выход",0,2);
+           switch (arMenu) {
+               case 1: GuessNumberGame();
+                        break;
+               case 2: GuessTheWorld();
+                        break;
+               default: break;
+           }
+      }
+      while (arMenu != 0);
+        sc.close();
     }
 
 }
+
