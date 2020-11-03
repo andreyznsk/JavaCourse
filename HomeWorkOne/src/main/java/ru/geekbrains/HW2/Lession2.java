@@ -173,7 +173,7 @@ public class Lession2 {
         System.out.print("сдвигаем на -3: ");
         PrintArry(ShiftOnN(arrShift,-3));
         arrShift = new int[]{1, 2, 3, 4, 5, 6};
-        System.out.print("сдвигаем на -3: ");
+        System.out.print("сдвигаем на -10 ");
         PrintArry(ShiftOnN(arrShift,-10));
     }
 
