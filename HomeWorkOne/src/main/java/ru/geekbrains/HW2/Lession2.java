@@ -19,8 +19,8 @@ public class Lession2 {
     public static int[] ChangeOneToZero(int[] a) { //метод п. 1
         for (int i = 0; i < a.length; i++) {
             if (a[i]==1) a[i] = 0;
-            else if (a[i]==0) a[i]=1;
-            else System.out.println("Erorr! Element of array №[" + i + "] Is Not Binary" );
+            else a[i]=1; // Исправил в соответсивии с заданием
+            //else System.out.println("Erorr! Element of array №[" + i + "] Is Not Binary" );
         }
        return a;
     }
@@ -35,7 +35,10 @@ public class Lession2 {
         return a;
     }
     public static int[][] ArrDiagToOne(int[][] a) { //метод п. 4
-        for (int i = 0; i < a[0].length; i++) a[i][i] = 1;
+        for (int i = 0; i < a[0].length; i++) {
+            a[i][i] = 1; // Заполнение прямой диагонали
+            a[i][(a[0].length) - i - 1] = 1; // Заполнение обратной диагонали
+        }
 
         return a;
     }
@@ -57,17 +60,16 @@ public class Lession2 {
         System.out.println("Максимальный элемент массива = " + max);
 
     }
-    public static boolean CheckBalance(int[] a) {//метод п. 6
-        int left = 0, right = 0;
-        for (int i = 0; i < a.length-1; i++) {
-            left += a[i];
-            for (int j = i+1; j < a.length ; j++) {
-                right += a[j];
-                }
-            if (left == right) {
+    public static boolean CheckBalance(int[] a) {//метод п. 6, модифицировал в соотвстствии с рекоммендациями
+        int left = 0, right = 0;// Убрал вложенные циклы
+        for (int j : a) right += j;// Суммируем весь массив
+        for (int i = 0; i < a.length; i++) {
+            left += a[i];//складываем слева
+            right = right - a[i];//вычитаем справа
+            if (left == right) {//проеряем баланс
                 System.out.println("Сумма баланса = " + right);
                 return true;}
-            else right = 0;
+            //else right = 0;
         }
         return false;
     }
@@ -104,7 +106,7 @@ public class Lession2 {
 
     public static void main(String[] args) {
         int[] arrBin = {1, 1, 0, 0, 1, 0, 1, 1, 0, 0};
-        int[] arDec = {1,1,0,0,12,23,1,0};
+        //int[] arDec = {1,1,0,0,12,23,1,0};
         int[] arrx = new int[8];
         int[] arr1 = { 1, 5, 3, 2, 11, 4, 5, 2, 4, 8, 9, 1 };
         int[][] arrD = new int[10][10];
@@ -113,9 +115,9 @@ public class Lession2 {
         System.out.print("Измененный массив 0 на 1 и 1 на 0: ");
         arrBin = ChangeOneToZero(arrBin);
         PrintArry(arrBin);
-        System.out.print("Массив с ошибкой: ");
-        PrintArry(arDec);
-        PrintArry(ChangeOneToZero(arDec));
+        //System.out.print("Массив с ошибкой: ");
+        //PrintArry(arDec);
+        //PrintArry(ChangeOneToZero(arDec));
         System.out.print("Нулевой массив п.2: ");
         PrintArry(arrx);
         arrx = FillArrX3(arrx);
@@ -173,8 +175,8 @@ public class Lession2 {
         System.out.print("сдвигаем на -3: ");
         PrintArry(ShiftOnN(arrShift,-3));
         arrShift = new int[]{1, 2, 3, 4, 5, 6};
-        System.out.print("сдвигаем на -10 ");
-        PrintArry(ShiftOnN(arrShift,-10));
+        System.out.print("сдвигаем на -30 ");
+        PrintArry(ShiftOnN(arrShift,3));//При значительно большем числе выходит ошибка
     }
 
 }

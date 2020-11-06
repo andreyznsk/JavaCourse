@@ -30,7 +30,7 @@ public class Lession3 {
         //Random random = new Random();
         String userWord;
         String[] words = {"apple", "orange", "lemon", "banana", "apricot", "avocado", "broccoli", "carrot", "cherry", "garlic", "grape", "melon", "leak", "kiwi", "mango", "mushroom", "nut", "olive", "pea", "peanut", "pear", "pepper", "pineapple", "pumpkin", "potato"};
-        String pcWord = words[random.nextInt(words.length)-1];//Запоминаем случайное слово
+        String pcWord = words[random.nextInt(words.length)];//Запоминаем случайное слово. Изменил границы
         //String pcWord = "123";
         printArrayWard(words); // Вывод всего набора слов
         do {
