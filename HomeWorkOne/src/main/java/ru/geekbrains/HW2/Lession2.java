@@ -74,7 +74,7 @@ public class Lession2 {
         return false;
     }
 
-    public static int[] ShiftOnOne(int[] a) {//Вспомогательный метод сдвиг на 1
+    public static void ShiftOnOne(int[] a) {//Вспомогательный метод сдвиг на 1
         int tempA = a[1];
         a[1] = a[0];
         for (int i = 1; i < a.length; i++) {
@@ -89,7 +89,6 @@ public class Lession2 {
         a[0] = tempA;
 
 
-        return a;
     }
 
     public static int[] ShiftOnN(int[] a, int b) {//метод п. 7
