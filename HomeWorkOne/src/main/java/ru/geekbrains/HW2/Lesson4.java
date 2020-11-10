@@ -10,7 +10,7 @@ public class Lesson4 {
 
     // Переменные - параметры игры
     public static int SIZE = 3;
-    public static int DOTS_TO_WIN = 3;
+    public static int dotsToWin = 3;
     //public static final int LINE_LIMIT = 15;
 
     // Константы • X O
@@ -28,7 +28,7 @@ public class Lesson4 {
 
         //Запрос у игрока размера поля и количества выиграшных фишек.
         setGameLevel();
-        System.out.println("граем на поле размера: " + SIZE + " Длинна выиграшной линии: " + DOTS_TO_WIN);
+        System.out.println("граем на поле размера: " + SIZE + " Длинна выиграшной линии: " + dotsToWin);
         // Инициализация игрового поля
         initMap();
 
@@ -104,9 +104,9 @@ public class Lesson4 {
 
         do {//Цикл проверки правильности ввода данныхы в игру
         if(wrong) System.out.println("Количество фишек должнго быть больше 3 и меньше размера поля"); //
-        DOTS_TO_WIN = getNumberFromScanner("Введите длинну фишек для победы от 3 до " + SIZE + "\n", 3, 10);
+        dotsToWin = getNumberFromScanner("Введите длинну фишек для победы от 3 до " + SIZE + "\n", 3, 10);
         wrong = true;//если введено неправильное значение установить флаг ошибки
-    } while (DOTS_TO_WIN > SIZE);//Проверка соответствия размера поля и длинны выиграшной комбинации
+    } while (dotsToWin > SIZE);//Проверка соответствия размера поля и длинны выиграшной комбинации
     }
 
     public static int getNumberFromScanner(String message, int min, int max) {// запрашивает у пользователя число в заданных пределах
@@ -118,19 +118,24 @@ public class Lesson4 {
         return x;
     }
 
-    public static boolean checkHorizon(int offsetY, int offsetX, int length, char symb){//Метод проверки горизонталей
-        boolean flagWin = true;
+    public static boolean checkHorizon(int offsetY, int offsetX, int length, char symb){//Метод проверки горизонталей и вертикалей
+        boolean flagWinHor = true;
+        boolean flagWinVert = true;
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {
-                flagWin &= map[i+offsetX][j+offsetY]==symb;
+                flagWinHor &= map[i+offsetX][j+offsetY]==symb;
+                flagWinVert &= map[j+offsetY][i+offsetX]==symb;
             }
-            if (flagWin) return flagWin;
-            else flagWin = true;
+            if (flagWinHor||flagWinVert) return true;
+            else {
+                flagWinHor = true;
+                flagWinVert = true;
+            }
         }
     return false;
     }
 
-    public static boolean checkVert(int offsetY, int offsetX, int length, char symb){//Метод проверки всертикалей
+    /*public static boolean checkVert(int offsetY, int offsetX, int length, char symb){//Метод проверки всертикалей
         boolean flagWin = true;
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {
@@ -140,39 +145,30 @@ public class Lesson4 {
             else flagWin = true;
         }
         return false;
-    }
+    }*/
 
     public static boolean checkDiag(int offsetY, int offsetX, int length, char symb){//Метод проверки диагонали
         boolean flagWin = true;
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < length; j++) {
+
+            for (int j = 0; j < length; j++)
                 flagWin &= map[j+offsetY][j+offsetX]==symb;
-            }
-            if (flagWin) return flagWin;
-            else flagWin = true;
-        }
-        return false;
+
+        return flagWin;
     }
     public static boolean checkinvDiag(int offsetY, int offsetX, int length, char symb){//Метод проверки обратной диагонали
         boolean flagWin = true;
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < length; j++) {
-                flagWin &= map[j+offsetX][length-j+offsetY-1]==symb;
-            }
-            if (flagWin) return flagWin;
-            else flagWin = true;
-        }
-        return false;
+        for (int j = 0; j < length; j++) flagWin &= map[j+offsetX][length-j+offsetY-1]==symb;
+        return flagWin;
     }
 
     private static boolean checkWin(char symb) {//Метод проверки наличия выиграшной комбинации
-        for (int i = 0; i <= SIZE-DOTS_TO_WIN; i++) {//Цикл проверки всех квадратов размера DOTS_TO_WIN*DOTS_TO_WIN во всем поле
-            for (int j = 0; j <= SIZE-DOTS_TO_WIN; j++) {
+        for (int i = 0; i <= SIZE- dotsToWin; i++) {//Цикл проверки всех квадратов размера DOTS_TO_WIN*DOTS_TO_WIN во всем поле
+            for (int j = 0; j <= SIZE- dotsToWin; j++) {
                 //Методы проверки малых квадратов во всех направлениях
-                if(checkHorizon(i,j,DOTS_TO_WIN,symb)) return true;// Цикл проверки по горизонтали
-                if(checkVert(i,j,DOTS_TO_WIN,symb)) return true;//Цикл проверки по вертикали
-                if(checkDiag(i,j,DOTS_TO_WIN,symb)) return true;//Цикл проерки диагонали
-                if(checkinvDiag(i,j,DOTS_TO_WIN,symb)) return true;//Цикл проверки обратной диагнали
+                if(checkHorizon(i,j, dotsToWin,symb)) return true;// Цикл проверки по горизонтали
+                //if(checkVert(i,j, dotsToWin,symb)) return true;//Цикл проверки по вертикали
+                if(checkDiag(i,j, dotsToWin,symb)) return true;//Цикл проерки диагонали
+                if(checkinvDiag(i,j, dotsToWin,symb)) return true;//Цикл проверки обратной диагнали
             }
         }
         return false;
