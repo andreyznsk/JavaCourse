@@ -11,7 +11,7 @@ public class PersonalCard {
     private int age;
     private int hireOrder;
 
-    public PersonalCard() {
+    public PersonalCard() {//Конструктор по умолчанию
         this.F_I_O = "Default";
         this.position = "Unknown";
         this.eMail = "Unknown";
@@ -21,13 +21,13 @@ public class PersonalCard {
         personNumber++;
         this.hireOrder = personNumber;
         }
-
+        //Конструктор со строками
     public PersonalCard(String f_I_O, String position, String eMail, String tel, int salary, int age) {
         if (!isTel(tel)) {
-            System.out.println("Телефон должен состояить из 11 цифр");
+            System.out.println("Телефон должен состояить из 11 цифр");//проерка внуиренним методом на длинну телефона
             return;}
         if (!isEMail(eMail)) {
-            System.out.println("Почта указана неверно!");
+            System.out.println("Почта указана неверно!");//Проерка внутринним методом на правильность почты
             return;}
 
         this.F_I_O = f_I_O;
@@ -37,11 +37,11 @@ public class PersonalCard {
         this.salary = salary;
         this.age = age;
         personNumber++;
-        this.hireOrder = personNumber;
+        this.hireOrder = personNumber;//номер приказа присваеватся автоматически следующий за последним
     }
 
     public void setEMail(String eMail) {
-        if(isEMail(eMail)) this.eMail = eMail;
+                if(isEMail(eMail)) this.eMail = eMail;
         else System.out.println("Не правильно указана почта");
     }
 
