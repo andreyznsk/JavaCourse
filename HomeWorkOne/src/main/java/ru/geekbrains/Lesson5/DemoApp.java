@@ -1,9 +1,13 @@
 package ru.geekbrains.Lesson5;
 
+
+import javax.crypto.spec.PSource;
+
 public class DemoApp {
     public static void main(String[] args) {
     PersonalCard person1 = new PersonalCard();//Используем стандартный конструктор
     person1.printPersonCard();//Печатаем карточку Дефолт
+
         person1.setFullname("Иванов И.И.");
         person1.setPosition("Engineer");
         person1.setAge(38);

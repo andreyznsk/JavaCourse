@@ -3,6 +3,7 @@ package ru.geekbrains.Lesson5;
 public class PersonalCard {
     private static int personNumber = 0;//Статическая переменная - количество сторудников. Количество объектов даного класса.
 
+
     private String fullname;
     private String position;
     private String eMail;
@@ -10,6 +11,7 @@ public class PersonalCard {
     private int salary;
     private int age;
     private int hireOrder;
+
 
     public PersonalCard() {//Конструктор по умолчанию
         this.fullname = "Default";
@@ -21,6 +23,7 @@ public class PersonalCard {
         personNumber++;
         this.hireOrder = personNumber;
         }
+
         //Конструктор со строками
     public PersonalCard(String fullname, String position, String eMail, String tel, int salary, int age) {
         if (!isTel(tel)) {
@@ -31,17 +34,20 @@ public class PersonalCard {
             return;}
 
         this.fullname = fullname;
+
         this.position = position;
         this.eMail = eMail;
         this.tel = tel;
         this.salary = salary;
         this.age = age;
         personNumber++;
+
         this.hireOrder = personNumber;//номер приказа присваеватся автоматически следующий за последним
     }
 
     public void setEMail(String eMail) {
                 if(isEMail(eMail)) this.eMail = eMail;
+
         else System.out.println("Не правильно указана почта");
     }
 
@@ -54,8 +60,10 @@ public class PersonalCard {
         this.salary = salary;
     }
 
+
     public void setFullname(String fullname) {
         this.fullname = fullname;
+
     }
 
     public void setPosition(String position) {
@@ -72,6 +80,7 @@ public class PersonalCard {
 
     public void printPersonCard(){
         System.out.println("Информация и сотрудинке: ");
+
         System.out.println("1. ФИО: " + this.fullname);
         System.out.println("2. Должность: " + this.position);
         System.out.println("3. E-Mail: " + this.eMail);
