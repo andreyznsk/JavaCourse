@@ -3,7 +3,7 @@ package ru.geekbrains.Lesson5;
 public class PersonalCard {
     private static int personNumber = 0;//Статическая переменная - количество сторудников. Количество объектов даного класса.
 
-    private String F_I_O;
+    private String fullname;
     private String position;
     private String eMail;
     private String tel;
@@ -12,7 +12,7 @@ public class PersonalCard {
     private int hireOrder;
 
     public PersonalCard() {//Конструктор по умолчанию
-        this.F_I_O = "Default";
+        this.fullname = "Default";
         this.position = "Unknown";
         this.eMail = "Unknown";
         this.tel = "70000000000";
@@ -22,7 +22,7 @@ public class PersonalCard {
         this.hireOrder = personNumber;
         }
         //Конструктор со строками
-    public PersonalCard(String f_I_O, String position, String eMail, String tel, int salary, int age) {
+    public PersonalCard(String fullname, String position, String eMail, String tel, int salary, int age) {
         if (!isTel(tel)) {
             System.out.println("Телефон должен состояить из 11 цифр");//проерка внуиренним методом на длинну телефона
             return;}
@@ -30,7 +30,7 @@ public class PersonalCard {
             System.out.println("Почта указана неверно!");//Проерка внутринним методом на правильность почты
             return;}
 
-        this.F_I_O = f_I_O;
+        this.fullname = fullname;
         this.position = position;
         this.eMail = eMail;
         this.tel = tel;
@@ -54,8 +54,8 @@ public class PersonalCard {
         this.salary = salary;
     }
 
-    public void setF_I_O(String F_I_O) {
-        this.F_I_O = F_I_O;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public void setPosition(String position) {
@@ -72,7 +72,7 @@ public class PersonalCard {
 
     public void printPersonCard(){
         System.out.println("Информация и сотрудинке: ");
-        System.out.println("1. ФИО: " + this.F_I_O);
+        System.out.println("1. ФИО: " + this.fullname);
         System.out.println("2. Должность: " + this.position);
         System.out.println("3. E-Mail: " + this.eMail);
         System.out.println("4. Tel: " + this.tel);
