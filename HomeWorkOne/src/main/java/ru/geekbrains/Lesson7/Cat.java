@@ -4,11 +4,13 @@ public class Cat {
     private String name;
     private int appetite;
     private boolean satiety; // Поле сытость
+    protected static int id = 10 ;
 
     public Cat(){
         this.name = "Unknown";
         this.appetite = 0;
         this.satiety = false;// По умлочанию Кот голодный
+        id++;
     }
 
 
@@ -16,6 +18,7 @@ public class Cat {
         this.name = name;
         this.appetite = appetite;
         this.satiety = false;// По умлочанию Кот голодный
+        id++;
     }
     public void eat(Plate p) {
        if(this.satiety) {
@@ -43,6 +46,18 @@ public class Cat {
 
     public boolean isSatiety() {
         return satiety;
+    }
+
+    public static int getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setApp(int appetite) {
+        this.appetite = appetite;
     }
 }
 

@@ -39,8 +39,8 @@ public abstract class animal {//Объявляем суперкласс абст
         System.out.println(type + " " + name + " прыгнул(а):" + let);
     }
 
-    public static void getId() {//Метод вывода количества созданных объектов данного класса
-        System.out.println("Всего объектов создано:" + id);
+    public int getId() {//Метод вывода количества созданных объектов данного класса
+       return id;
     }
 
     public void setAge(int age) {

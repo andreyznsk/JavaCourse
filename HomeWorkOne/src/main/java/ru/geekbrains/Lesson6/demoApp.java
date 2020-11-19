@@ -30,7 +30,6 @@ public class demoApp {
         cat1.setFalagSwimig(true);
         cat1.swim(2);
         cat1.swim(10);
-        animal.getId();
 
     }
 }
