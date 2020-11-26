@@ -1,9 +1,14 @@
 package ru.JavaLevel2.lesson1;
 
-public class Treadmill {
-    private int DISTANCE = 10;
+public class Treadmill implements Obstacle{
+    private int dist;
 
-    public int getHeight() {
-        return DISTANCE;
+    public Treadmill(int dist) {
+        this.dist = dist;
+    }
+
+    @Override
+    public int getLet() {
+        return dist;
     }
 }

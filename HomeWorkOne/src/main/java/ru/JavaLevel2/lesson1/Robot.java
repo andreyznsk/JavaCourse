@@ -1,21 +1,37 @@
 package ru.JavaLevel2.lesson1;
 
-public class Robot implements Models {
+public class Robot implements ModelArray {
     private String name;
-    private int MAX_RUN = 100;
-    private int MAX_JUMP = 1;
+    private int MaxRun = 100;
+    private int MaxJump = 1;
 
-    public Robot(String name) {
+    public Robot(String name, int MaxRun, int MaxJump) {
         this.name = name;
+        this.MaxJump = MaxJump;
+        this.MaxRun = MaxRun;
     }
 
-    public void run(int let) {
-        if (let < MAX_RUN) System.out.println("Робот пробежал");
-        else System.out.println("Препядствие не пройдено");
-    }
 
-    public void jump(int let){
-        if (let < MAX_RUN) System.out.println("Робот перепрыгнул");
-        else System.out.println("Препядствие не пройдено");
+    @Override
+    public boolean run(int let) {
+        if (let < MaxRun) {
+            System.out.printf("Робот по имени %s пробежал по дрожке\n",name);
+            return true;
+        }
+        else {
+            System.out.println("Робот не справился с препядчтвием: дорожка");
+            return false;
+        }
+    }
+    @Override
+    public boolean jump(int let){
+        if (let < MaxJump) {
+            System.out.printf("Робот по имени %s перепрыгнул стену\n",name);
+            return true;
+        }
+        else {
+            System.out.println("Робот не справился с препядчтвием: стена");
+            return false;
+        }
     }
 }

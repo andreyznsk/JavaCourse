@@ -1,9 +1,14 @@
 package ru.JavaLevel2.lesson1;
 
-public class Wall {
-    private int HEIGHT = 10;
+public class Wall implements Obstacle {
+    private int height;
 
-    public int getHeight() {
-        return HEIGHT;
+    public Wall(int height) {
+        this.height = height;
+    }
+
+    @Override
+    public int getLet() {
+        return height;
     }
 }

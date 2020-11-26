@@ -1,21 +1,36 @@
 package ru.JavaLevel2.lesson1;
 
-public class Human implements Models {
+public class Human implements ModelArray {
     private String name;
-    private int MAX_RUN = 10;
-    private int MAX_JUMP = 10;
+    private int MaxRun = 10;
+    private int MaxJump = 10;
 
-    public Human(String name) {
+    public Human(String name, int maxRun, int maxJump) {
         this.name = name;
-    }
+        this.MaxJump = maxJump;
+        this.MaxRun = maxRun;
 
-    public void run(int let) {
-        if (let < MAX_RUN) System.out.printf("Человек по имени %s пробежал", name);
-        else System.out.println("Препядствие не пройдено");
     }
-
-    public void jump(int let){
-        if (let < MAX_RUN) System.out.printf("Человек по имени %s пробежал", name);
-        else System.out.println("Препядствие не пройдено");
+    @Override
+    public boolean run(int let) {
+        if (let < MaxRun) {
+            System.out.printf("Человек по имени %s пробежал по дрожке\n",name);
+            return true;
+        }
+        else {
+            System.out.println("Челоек не справился с препядствием: дорожка");
+            return false;
+        }
+    }
+    @Override
+    public boolean jump(int let){
+        if (let < MaxJump) {
+            System.out.printf("Человек по имени %s перепрыгнул стену\n",name);
+            return true;
+        }
+        else {
+            System.out.println("Члоек не справился с препядствием: стена");
+            return false;
+        }
     }
 }

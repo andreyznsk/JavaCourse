@@ -1,21 +1,37 @@
 package ru.JavaLevel2.lesson1;
 
-public class Cat implements Models {
+public class Cat implements ModelArray {
     private String name;
-    private int MAX_RUN = 10;
-    private int MAX_JUMP = 10;
+    private int MaxRun;
+    private int MaxJump;
 
-    public Cat(String name) {
+    public Cat(String name, int MaxRun, int MaxJump) {
+
         this.name = name;
+        this.MaxRun = MaxRun;
+        this.MaxJump = MaxJump;
     }
 
-    public void run(int let) {
-        if (let < MAX_RUN) System.out.printf("Кот по имени %s пробежал",name);
-        else System.out.print("Препядствие не пройдено");
+    @Override
+    public boolean run(int let) {
+        if (let < MaxRun) {
+            System.out.printf("Кот по имени %s пробежал по дрожке\n",name);
+            return true;
+        }
+        else {
+            System.out.println("Кто не справился с препядствием: дорожка");
+            return false;
+        }
     }
-
-    public void jump(int let){
-        if (let < MAX_RUN) System.out.printf("Кот по имени %s пробежал",name);
-        else System.out.println("Препядствие не пройдено");
+    @Override
+    public boolean jump(int let){
+        if (let < MaxJump) {
+            System.out.printf("Кот по имени %s перепрыгнул стену\n",name);
+            return true;
+        }
+        else {
+            System.out.println("Кто не справился с препядствием: стена");
+            return false;
+        }
     }
 }
