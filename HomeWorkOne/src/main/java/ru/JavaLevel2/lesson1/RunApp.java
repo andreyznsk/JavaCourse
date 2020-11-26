@@ -19,13 +19,13 @@ public class RunApp {
         for (Obstacle o:obstacle) {
           o.printMe();
         }
-        for (int i = 0; i < models.length; i++) {
-            for (int j = 0; j < obstacle.length; j++) {
-                if (!obstacle[j].passMe(models[i])) break;
-                }
-
-
+        for (Participant model : models) {
+            for (Obstacle value : obstacle) {
+                if (!value.passMe(model)) break;
             }
+
+
+        }
 
         }
 
