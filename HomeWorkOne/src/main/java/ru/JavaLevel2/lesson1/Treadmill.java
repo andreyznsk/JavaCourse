@@ -8,7 +8,12 @@ public class Treadmill implements Obstacle{
     }
 
     @Override
-    public int getLet() {
-        return dist;
+    public boolean passMe(Participant o){
+        return o.run(dist);
+    }
+
+    @Override
+    public void printMe() {
+        System.out.println("Длинна дорожки: " + dist);
     }
 }

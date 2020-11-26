@@ -1,20 +1,20 @@
 package ru.JavaLevel2.lesson1;
 
-public class Robot implements ModelArray {
+public class Robot implements Participant {
     private String name;
-    private int MaxRun = 100;
-    private int MaxJump = 1;
+    private int maxRun = 100;
+    private int maxJump = 1;
 
     public Robot(String name, int MaxRun, int MaxJump) {
         this.name = name;
-        this.MaxJump = MaxJump;
-        this.MaxRun = MaxRun;
+        this.maxJump = MaxJump;
+        this.maxRun = MaxRun;
     }
 
 
     @Override
     public boolean run(int let) {
-        if (let < MaxRun) {
+        if (let < maxRun) {
             System.out.printf("Робот по имени %s пробежал по дрожке\n",name);
             return true;
         }
@@ -25,7 +25,7 @@ public class Robot implements ModelArray {
     }
     @Override
     public boolean jump(int let){
-        if (let < MaxJump) {
+        if (let < maxJump) {
             System.out.printf("Робот по имени %s перепрыгнул стену\n",name);
             return true;
         }

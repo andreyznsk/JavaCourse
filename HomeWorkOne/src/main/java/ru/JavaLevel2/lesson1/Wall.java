@@ -8,7 +8,12 @@ public class Wall implements Obstacle {
     }
 
     @Override
-    public int getLet() {
-        return height;
+    public boolean passMe(Participant o) {
+        return o.jump(height);
+    }
+
+    @Override
+    public void printMe() {
+        System.out.println("Высота стены: " + height);
     }
 }

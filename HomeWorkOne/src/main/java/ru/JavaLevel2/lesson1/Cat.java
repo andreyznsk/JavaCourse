@@ -1,20 +1,20 @@
 package ru.JavaLevel2.lesson1;
 
-public class Cat implements ModelArray {
+public class Cat implements Participant {
     private String name;
-    private int MaxRun;
-    private int MaxJump;
+    private int maxRun;
+    private int maxJump;
 
     public Cat(String name, int MaxRun, int MaxJump) {
 
         this.name = name;
-        this.MaxRun = MaxRun;
-        this.MaxJump = MaxJump;
+        this.maxRun = MaxRun;
+        this.maxJump = MaxJump;
     }
 
     @Override
     public boolean run(int let) {
-        if (let < MaxRun) {
+        if (let < maxRun) {
             System.out.printf("Кот по имени %s пробежал по дрожке\n",name);
             return true;
         }
@@ -25,7 +25,7 @@ public class Cat implements ModelArray {
     }
     @Override
     public boolean jump(int let){
-        if (let < MaxJump) {
+        if (let < maxJump) {
             System.out.printf("Кот по имени %s перепрыгнул стену\n",name);
             return true;
         }
