@@ -1,12 +1,12 @@
 package ru.geekbrains.Lesson6;
 
-public class Cat extends Animal {
+public class cat extends animal {
 
     private boolean falagSwimig;
 
-    public Cat(int age, String name){
+    public cat(int age,String name){
         super(age,name);
-
+        setType("Кот");
         this.falagSwimig = false;
     }
 
@@ -19,11 +19,7 @@ public class Cat extends Animal {
     public void run(double  let) {
         if (let >= 0 && let <= 200) super.run(let);
         else System.out.println(getType() + " не может выполнить команду Бег на " + let +" м");
-    }
 
-    @Override
-    public String getType() {
-        return "КОТ";
     }
 
     @Override

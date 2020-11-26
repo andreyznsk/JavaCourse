@@ -1,8 +1,8 @@
 package ru.geekbrains.Lesson6;
 
-public class DemoApp {
+public class demoApp {
     public static void main(String[] args) {
-        Dog dog1 = new Dog(3, "Шарик");
+        dog dog1 = new dog(3, "Шарик");
         dog1.getInfo();
         dog1.run(100);
         dog1.run(600);
@@ -11,14 +11,14 @@ public class DemoApp {
         dog1.jump(1);
         dog1.jump(0.2);
         System.out.println("Создали более сильную собаку на 700м");
-        Dog dog2 = new Dog(3,"РЭКС");
+        dog dog2 = new dog(3,"РЭКС");
         dog2.distRun(700);
         dog2.run(600);
 
 
 
         System.out.println("-------------------------------------------------------");
-        Cat cat1 = new Cat(3, "Мурзик");
+        cat cat1 = new cat(3, "Мурзик");
         cat1.getInfo();
         cat1.run(100);
         cat1.run(600);
