@@ -1,12 +1,11 @@
 package ru.geekbrains.Lesson6;
 
-public class dog extends animal {
+public class Dog extends Animal {
 
     private int distRun;//Дополнительная переменная класса определяющая максимальную длинн бега
 
-    public dog(int age, String name) {
+    public Dog(int age, String name) {
         super(age, name);
-        this.setType("Собака");
         this.distRun = 400;//Значение длинны бега по умолчанию
     }
 
@@ -19,6 +18,11 @@ public class dog extends animal {
         if (let >= 0 && let <= this.distRun) super.run(let);
         else System.out.println(getType() + " не может выполнить команду Бег на " + let +" м");
 
+    }
+
+    @Override
+    public String getType() {
+        return "СОБАКА";
     }
 
     @Override
