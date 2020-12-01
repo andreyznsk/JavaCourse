@@ -1,10 +1,11 @@
 package ru.JavaLevel2.Lesson3;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Lesson3 {
     public static void main(String[] args) {
-        ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<String> arrayList = new ArrayList<>(20);
         arrayList.add("A");
         arrayList.add("B");
         arrayList.add("C");
@@ -15,6 +16,7 @@ public class Lesson3 {
         arrayList.remove("E");
         arrayList.remove(2);
         System.out.println(arrayList);
+        System.out.println(arrayList.size());
 
     }
 }
