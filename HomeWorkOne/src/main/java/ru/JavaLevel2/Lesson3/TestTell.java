@@ -24,14 +24,12 @@ public class TestTell {
         telBook.add("Lena", 127);
         telBook.printAll();
 
-        System.out.println("Поиск по имени Mike");
-        telBook.get("Mike");
+        System.out.println("Поиск по имени Mike: " +  telBook.get("Mike"));
+        System.out.println("Поиск по имени Alex: " + telBook.get("Alex"));
 
-        System.out.println("Поиск по имени Alex");
-        telBook.get("Alex");
 
-        System.out.println("Поиск по имени Dima");
-        telBook.get("Dima");
+        System.out.println("Поиск по имени Dima: " +  telBook.get("Dima"));
+
 
     }
 }

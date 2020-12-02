@@ -25,14 +25,9 @@ public class TelBook {
         }
     }
 
-    public void get(String name){
+    public Set<Integer> get(String name) {
+        return telBook.get(new Person(name));
 
-        if (!telBook.containsKey(new Person(name))) System.out.println("Такого имени нет");
-        for (Map.Entry<Person, Set<Integer>> o : telBook.entrySet()) {
-            if(name.equals(o.getKey().getName()))
-            System.out.println(o.getKey() + ": " + o.getValue());
-
-        }
     }
 }
 
