@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,7 +27,8 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
-    textArea.setText("No Text");
+    //textArea.setText("No Text");
+        textField.setText(null);
 
     }
 
@@ -35,12 +37,54 @@ public class Controller implements Initializable {
     }
 
     public void buttonSendAction(ActionEvent actionEvent) {
-        messages.add("123");
-        String str = "";
+        if (textField.getText()!=null) {
+            {
+                messages.add(textField.getText());
+                String str = new String();
 
-        for (String s : messages
-        ) { str += s + '\n';
+                for (int i = 0; i < messages.size(); i++) {
+                    str += "(" + i + ") - " + messages.get(i) + '\n';
+                }
+                textArea.setText(str);
+                textField.setText(null);
+            }
         }
-        textArea.setText(str);
     }
+
+
+    public void enter(KeyEvent keyEvent) {
+        if (textField.getText()!=null) {
+            {
+                messages.add(textField.getText());
+                String str = new String();
+
+                for (int i = 0; i < messages.size(); i++) {
+                    str += "(" + i + ") - " + messages.get(i) + '\n';
+                }
+                textArea.setText(str);
+                textField.setText(null);
+            }
+        }
+    }
+
+    public void enterPress(ActionEvent actionEvent) {
+
+
+
+
+        if (actionEvent.getEventType().toString() == "ACTION" && textField.getText()!=null) {
+            {
+                messages.add(textField.getText());
+                String str = new String();
+
+                for (int i = 0; i < messages.size(); i++) {
+                    str += "(" + i + ") - " + messages.get(i) + '\n';
+                }
+                textArea.setText(str);
+                textField.setText(null);
+            }
+        }
+    }
+
+
 }
