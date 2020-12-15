@@ -1,4 +1,4 @@
-package lesson6.client;
+package ru.JavaLevel2.Lesson6.Client;
 
 
 import javafx.application.Application;
@@ -9,19 +9,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 
 public class EchoClient extends Application {
 
-    public static final List<String> USERS_TEST_DATA = List.of("Oleg", "Alexey", "Peter");
+    public static final String[] USERS_TEST_DATA = {"Oleg", "Alexey", "Peter"};
 
-
-    @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(EchoClient.class.getResource("view.fxml"));
+        loader.setLocation(EchoClient.class.getResource("/view.fxml"));
 
         Parent root = loader.load();
 

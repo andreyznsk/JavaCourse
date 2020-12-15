@@ -1,4 +1,4 @@
-package lesson6.client;
+package ru.JavaLevel2.Lesson6.Client;
 
 import javafx.application.Platform;
 
