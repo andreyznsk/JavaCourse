@@ -64,7 +64,7 @@ public class Network {
                         });
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     System.out.println("Соединение было потеряно!");
                 }
             }
