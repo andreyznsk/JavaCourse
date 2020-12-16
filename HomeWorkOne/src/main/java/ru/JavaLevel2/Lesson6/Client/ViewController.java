@@ -43,6 +43,7 @@ public class ViewController {
     }
 
     public void setNetwork(Network network) {
+
         this.network = network;
     }
 
