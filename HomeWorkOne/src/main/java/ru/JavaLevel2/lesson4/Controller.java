@@ -69,9 +69,6 @@ public class Controller implements Initializable {
 
     public void enterPress(ActionEvent actionEvent) {
 
-
-
-
         if (actionEvent.getEventType().toString() == "ACTION" && textField.getText()!=null) {
             {
                 messages.add(textField.getText());
