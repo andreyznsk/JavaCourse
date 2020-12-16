@@ -1,11 +1,14 @@
 package ru.JavaLevel2.Lesson5;
 
+import java.util.Arrays;
+
 public class TestThread {
     static final int SIZE = 10000000;
     static final int HALF = SIZE / 2;
 
 
-     public static void method1(){
+
+     public static float[] method1(){
 
 
         float[] arr = new float[SIZE];
@@ -18,10 +21,10 @@ public class TestThread {
             arr[i] = (float) (arr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
         }
         System.out.println("Время работы первого метода: " + (System.currentTimeMillis() - a));
-
+        return arr;
     }
 
-    public static void method2() throws InterruptedException {
+    public static float[] method2() throws InterruptedException {
         float[] arr = new float[SIZE];
         for (int i = 0; i < SIZE; i++) {
             arr[i] = 1;
@@ -37,7 +40,7 @@ public class TestThread {
 
         Runnable task2 = () -> {
             for (int i = 0; i < HALF; i++) {
-                a2[i] = (float) (a2[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
+                a2[i] = (float) (a2[i] * Math.sin(0.2f + (i+HALF) / 5) * Math.cos(0.2f + (i+HALF) / 5) * Math.cos(0.4f + (i+HALF) / 2));
             }
         };
 
@@ -57,11 +60,15 @@ public class TestThread {
 
 
         System.out.println("Время работы второго метода: " +(System.currentTimeMillis() - a));
+        return arr;
     }
 
     public static void main(String[] args) throws InterruptedException {
-        method1();
-        method2();
+        float[] arrSeq, arrPara;
+
+        arrSeq = method1();
+        arrPara = method2();
+        System.out.println(Arrays.equals(arrSeq,arrPara));
     }
 
 }

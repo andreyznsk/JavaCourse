@@ -1,79 +1,51 @@
 package ru.JavaLevel2.Lesson6.Server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
+import java.util.Scanner;
 
 public class EchoServer {
-    public static final int SERVER_PORT1 = 8189;
-    public static final int SERVER_PORT2 = 8190;
 
-   /* static Runnable task = ()->{
-        try(ServerSocket serverSocket = new ServerSocket(SERVER_PORT1)){
-            System.out.println("Waitting for new connection...");
-            Socket clientSocket = serverSocket.accept();
-            System.out.println("Client has been connected");
+    public static Scanner sc = new Scanner(System.in);
 
-            DataInputStream in = new DataInputStream(clientSocket.getInputStream());
-            DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-            while (true) {
-                String message = in.readUTF();
-                System.out.println("Client message"+message);
-                if (message.equals("/exit")) break;
-                out.writeUTF("Echo" + message);
-            }
-            System.out.println("Server has been closed");
-        } catch (SocketException e){
-            System.err.println("Server port is already opened!");
-            e.printStackTrace();
-            e.getCause();
-        }
-        catch (IOException e) {
-            System.err.println("Connection has been closed!");
-            e.printStackTrace();
-            e.getCause();
-        }
-    };
-*/
+   // public static final int SERVER_PORT1 = 8189;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws IOException {
 
         ServerThreads thread1 = new ServerThreads(8189);
+        ServerThreads thread2 = new ServerThreads(8190);
+        ServerThreads thread3 = new ServerThreads(8191);
 
-//        try(ServerSocket serverSocket = new ServerSocket(SERVER_PORT)){
-//            System.out.println("Waitting for new connection...");
-//            Socket clientSocket = serverSocket.accept();
-//            System.out.println("Client has been connected");
-//
-//            DataInputStream in = new DataInputStream(clientSocket.getInputStream());
-//            DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-//            while (true) {
-//                String message = in.readUTF();
-//                System.out.println("Client message"+message);
-//                if (message.equals("/exit")) break;
-//                out.writeUTF("Echo" + message);
-//            }
-//            System.out.println("Server has been closed");
-//        } catch (SocketException e){
-//            System.err.println("Server port is already opened!");
-//            e.printStackTrace();
-//            e.getCause();
-//        }
-//        catch (IOException e) {
-//            System.err.println("Connection has been closed!");
-//            e.printStackTrace();
-//            e.getCause();
-//        }
+        thread1.setDaemon(true);
+        thread2.setDaemon(true);
+        thread3.setDaemon(true);
+
         thread1.start();
+        thread2.start();
+        thread3.start();
+
+/*
+
         try {
             thread1.join();
+            thread2.join();
         } catch (InterruptedException e) {
+        System.out.println("Connection close");}
+*/
+        while (true){
+            System.out.println("Input message(type exit for exit): ");
+            String command = sc.next();
+            if (command.equals("exit")) break;
+            if(thread1.isAlive()) thread1.sendMessage(command);
+            if(thread2.isAlive()) thread2.sendMessage(command);
+            if(thread3.isAlive()) thread3.sendMessage(command);
 
-            System.out.println("Connection close");}
+
+        }
+
+
+        sc.close();
         System.out.println("End");
+
 
     }
 }
