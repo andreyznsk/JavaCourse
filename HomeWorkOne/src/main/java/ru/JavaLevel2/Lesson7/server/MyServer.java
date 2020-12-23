@@ -73,6 +73,24 @@ public class MyServer {
             client.sendMessage(message);
         }
     }
+    //Метод отправки приватного сообщения
+    public synchronized void recipientMeaasge(String message,ClientHandler sender, String recipient) throws IOException {
+        // Проверка на отправку самаому себе
+        if (sender.getNickname().equals(recipient)) sender.sendMessage("(Server:) Вы пытаетесь отправить сообщение самому себе!");
+        boolean isMessageSend = false;//Флаг было ли отправлено сообщение приватному пользователю
+
+        for (ClientHandler client : clients) {
+            if (client == sender) {//Пропустить самого себя
+               continue;
+            }
+            if (client.getNickname().equals(recipient)) {//Если найдено совподение, то
+                isMessageSend = true;//Установить флаг отправки сообщения
+                client.sendMessage(message);//Послать приватное сообщение
+                sender.sendMessage("(Private message to " + client.getNickname() + ") message: " + message);//Сообщение себе, что приватное сообщенеи ушло пользователю
+            }
+        }
+        if(!isMessageSend) sender.sendMessage("(Сервер:) Ошибка, нет такого пользователя!");//Если пользователь не найден, то отправить сообщение об ошибке
+    }
 
     public synchronized void subscribe(ClientHandler handler) {
         clients.add(handler);

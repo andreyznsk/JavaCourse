@@ -15,6 +15,7 @@ public class Network {
     private static final int SERVER_PORT = 8189;
 
     private static final String AUTH_OK_CMD = "/authok";
+    private static final String SEND_TO_NICk = "/w";
 
     private String host;
     private int port;
@@ -25,7 +26,7 @@ public class Network {
     private String nickname;
 
     public Network() {
-        this(SERVER_ADDRESS, SERVER_PORT);
+                this(SERVER_ADDRESS, SERVER_PORT);
     }
 
     public Network(String host, int port) {
@@ -61,9 +62,10 @@ public class Network {
 
     public void sendMessage(String message) throws IOException {
         getOutputStream().writeUTF(message);
+
     }
 
-    public void waitMessages(ViewController viewController) {
+      public void waitMessages(ViewController viewController) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -78,6 +80,7 @@ public class Network {
                                     clientChat.activeChatDialog(nickname);
                                 });
                             }
+
                             else {
                                 Platform.runLater(() -> {
                                     ClientChat.showNetworkError(message, "Auth error", null);
@@ -85,13 +88,14 @@ public class Network {
                             }
                         }
                         else {
+
                             Platform.runLater(() -> {
                                 viewController.appendMessage(message);
                             });
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                  //  e.printStackTrace();
                     System.out.println("Соединение было потеряно!");
                 }
             }

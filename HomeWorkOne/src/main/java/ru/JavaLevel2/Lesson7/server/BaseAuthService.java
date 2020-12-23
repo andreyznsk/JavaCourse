@@ -15,9 +15,11 @@ import java.util.Map;
         public void start() {
             System.out.println("Auth service is running");
             USERS = new HashMap<>();
-            USERS.put(new User("login1","Pass1","Perter"), "Peter");
-            USERS.put(new User("login2","Pass2","Alexey"), "Alexey");
-            USERS.put(new User("login3","Pass3","Oleg"), "Oleg");
+            USERS.put(new User("2","2","Perter"), "Peter");
+            USERS.put(new User("3","3","Alexey"), "Alexey");
+            USERS.put(new User("4","4","Oleg"), "Oleg");
+            USERS.put(new User("1","1","Andreyz"), "Andreyz");
+
 
 
         }

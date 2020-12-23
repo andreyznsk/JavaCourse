@@ -13,6 +13,7 @@ import java.io.IOException;
         private static final String END_CMD = "/end";
         private static final String AUTH_CMD = "/auth"; // "/auth login password"
         private static final String AUTH_OK_CMD = "/authok";
+        private static final String PRIVAT_SEND_CMD = "/w";
 
         private final MyServer myServer;
         private final Socket clientSocket;
@@ -82,6 +83,16 @@ import java.io.IOException;
                 if (message.startsWith(END_CMD)) {
                     return;
                 }
+
+                else if (message.startsWith(PRIVAT_SEND_CMD)) {
+                    System.out.println("send to client: ");
+                    String[] parts = message.split(" ", 3);
+                    String nick = parts[1];
+                    String privatMessage = parts[2];
+                  if(myServer.isNickBusy(nick)) System.out.println("Ник найден посылаем ему сообщение");;
+                    myServer.recipientMeaasge(privatMessage, this, nick);
+                }
+
                 else {
                     myServer.broadcastMessage(nickname + ": " + message, this);
                 }

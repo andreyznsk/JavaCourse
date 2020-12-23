@@ -2,13 +2,11 @@ package ru.JavaLevel2.Lesson7.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ru.JavaLevel2.Lesson7.client.models.ClientChatState;
 import ru.JavaLevel2.Lesson7.client.models.Network;
@@ -34,6 +32,8 @@ public class ClientChat extends Application {
         USERS_TEST_DATA.add("Oleg");
         USERS_TEST_DATA.add("Alexey");
         USERS_TEST_DATA.add("Peter");
+        USERS_TEST_DATA.add("Andreyz");
+
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(ClientChat.class.getResource("/view_lesson7.fxml"));
@@ -44,8 +44,6 @@ public class ClientChat extends Application {
         primaryStage.setTitle("Messenger");
         primaryStage.setScene(new Scene(root, 600, 400));
         viewController.getTextField().requestFocus();
-
-        setStageForSecondScreen(primaryStage);
 
         network = new Network(this);
         if (!network.connect()) {
@@ -82,7 +80,6 @@ public class ClientChat extends Application {
         authController.setNetwork(network);
 
         authDialogStage.setScene(new Scene(parent));
-        setStageForSecondScreen(authDialogStage);
         authDialogStage.show();
     }
 
@@ -99,22 +96,6 @@ public class ClientChat extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    private void setStageForSecondScreen(Stage primaryStage) {
-        Screen secondScreen = getSecondScreen();
-        Rectangle2D bounds = secondScreen.getBounds();
-        primaryStage.setX(bounds.getMinX() + (bounds.getWidth() - 300) / 2);
-        primaryStage.setY(bounds.getMinY() + (bounds.getHeight() - 200) / 2);
-    }
-
-    private Screen getSecondScreen() {
-        for (Screen screen : Screen.getScreens()) {
-            if (!screen.equals(Screen.getPrimary())) {
-                return screen;
-            }
-        }
-        return Screen.getPrimary();
     }
 
     public ClientChatState getState() {

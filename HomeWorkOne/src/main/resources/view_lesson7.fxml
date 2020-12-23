@@ -27,7 +27,7 @@
                                                 </Label>
                                             </children>
                                         </HBox>
-                                        <TextArea fx:id="" editable="false" maxHeight="1.7976931348623157E308" prefWidth="200.0" wrapText="true" VBox.vgrow="ALWAYS" />
+                                        <TextArea fx:id="chatHistory" editable="false" maxHeight="1.7976931348623157E308" prefWidth="200.0" wrapText="true" VBox.vgrow="ALWAYS" />
                                     </children>
                                 </VBox>
                                 <AnchorPane maxHeight="50.0" minHeight="30.0" minWidth="0.0" prefWidth="160.0">

@@ -1,24 +1,26 @@
 package ru.JavaLevel2.Lesson7.client;
+
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import ru.JavaLevel2.Lesson7.client.ClientChat;
 import ru.JavaLevel2.Lesson7.client.models.Network;
 
 import java.io.IOException;
 
 public class ViewController {
 
-
+    @FXML
     private TextArea chatHistory;
     @FXML
     private TextField textField;
     private Network network;
     private Stage primaryStage;
+    @FXML
+    private ListView usersList;
+   // private ListView<String> usersList;
 
 
     @FXML
@@ -28,7 +30,7 @@ public class ViewController {
 //        textField.setOnAction(event -> sendMessage());
 
 
-      //  usersList.setItems(FXCollections.observableArrayList(ClientChat.USERS_TEST_DATA));
+        usersList.setItems(FXCollections.observableArrayList(ClientChat.USERS_TEST_DATA));
         textField.requestFocus();
     }
 
