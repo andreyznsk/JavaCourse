@@ -1,5 +1,6 @@
 package ru.JavaLevel2.Lesson7.server;
 
+import ru.JavaLevel2.Lesson7.ClaintServer.Command;
 import ru.JavaLevel2.Lesson7.server.Handler.ClientHandler;
 
 import java.io.IOException;
@@ -65,39 +66,43 @@ public class MyServer {
     }
 
     public synchronized void broadcastMessage(String message, ClientHandler sender) throws IOException {
+
         for (ClientHandler client : clients) {
             if (client == sender) {
                 continue;
             }
+            if (sender == null) {
+                client.sendMessage(message);
+            } else {
+                client.sendMessage(sender.getNickname(), message);
+            }
 
-            client.sendMessage(message);
         }
     }
-    //Метод отправки приватного сообщения
-    public synchronized void recipientMeaasge(String message,ClientHandler sender, String recipient) throws IOException {
-        // Проверка на отправку самаому себе
-        if (sender.getNickname().equals(recipient)) sender.sendMessage("(Server:) Вы пытаетесь отправить сообщение самому себе!");
-        boolean isMessageSend = false;//Флаг было ли отправлено сообщение приватному пользователю
+
+    public synchronized void subscribe(ClientHandler handler) throws IOException {
+        clients.add(handler);
+        notifyClientsUsersListUpdated(clients);
+    }
+
+    public synchronized void unsubscribe(ClientHandler handler) throws IOException {
+        clients.remove(handler);
+        notifyClientsUsersListUpdated(clients);
+    }
+
+    private void notifyClientsUsersListUpdated(List<ClientHandler> clients) throws IOException {
+        List<String> usernames = new ArrayList<>();
+        for (ClientHandler client : clients) {
+            usernames.add(client.getNickname());
+        }
 
         for (ClientHandler client : clients) {
-            if (client == sender) {//Пропустить самого себя
-               continue;
-            }
-            if (client.getNickname().equals(recipient)) {//Если найдено совподение, то
-                isMessageSend = true;//Установить флаг отправки сообщения
-                client.sendMessage(message);//Послать приватное сообщение
-                sender.sendMessage("(Private message to " + client.getNickname() + ") message: " + message);//Сообщение себе, что приватное сообщенеи ушло пользователю
-            }
+//            List<String> usernames = clients.stream()
+//                    .map(ClientHandler::getNickname)
+//                    .collect(Collectors.toList());
+
+            client.sendCommand(Command.updateUsersListCommand(usernames));
         }
-        if(!isMessageSend) sender.sendMessage("(Сервер:) Ошибка, нет такого пользователя!");//Если пользователь не найден, то отправить сообщение об ошибке
-    }
-
-    public synchronized void subscribe(ClientHandler handler) {
-        clients.add(handler);
-    }
-
-    public synchronized void unsubscribe(ClientHandler handler) {
-        clients.remove(handler);
     }
 
     public AuthService getAuthService() {
@@ -111,5 +116,13 @@ public class MyServer {
             }
         }
         return false;
+    }
+
+    public synchronized void sendPrivateMessage(ClientHandler sender, String recipient, String privateMessage) throws IOException {
+        for (ClientHandler client : clients) {
+            if (client.getNickname().equals(recipient)) {
+                client.sendMessage(sender.getNickname(), privateMessage);
+            }
+        }
     }
 }

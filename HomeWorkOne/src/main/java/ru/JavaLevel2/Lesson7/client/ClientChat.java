@@ -1,6 +1,7 @@
 package ru.JavaLevel2.Lesson7.client;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,14 +27,13 @@ public class ClientChat extends Application {
     private Network network;
     private ViewController viewController;
 
+    public void updateUsers(List<String> users) {
+        viewController.usersList.setItems(FXCollections.observableList(users));
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        USERS_TEST_DATA.add("Oleg");
-        USERS_TEST_DATA.add("Alexey");
-        USERS_TEST_DATA.add("Peter");
-        USERS_TEST_DATA.add("Andreyz");
-
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(ClientChat.class.getResource("/view_lesson7.fxml"));

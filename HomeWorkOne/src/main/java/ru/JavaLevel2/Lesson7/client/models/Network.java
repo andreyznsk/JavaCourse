@@ -2,115 +2,186 @@ package ru.JavaLevel2.Lesson7.client.models;
 
 
 import javafx.application.Platform;
+import ru.JavaLevel2.Lesson7.ClaintServer.Command;
+import ru.JavaLevel2.Lesson7.ClaintServer.commands.*;
 import ru.JavaLevel2.Lesson7.client.ClientChat;
 import ru.JavaLevel2.Lesson7.client.ViewController;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+
+import static ru.JavaLevel2.Lesson7.ClaintServer.Command.*;
 
 public class Network {
 
-    private static final String SERVER_ADDRESS = "localhost";
-    private static final int SERVER_PORT = 8189;
+         private static final String SERVER_ADDRESS = "localhost";
+        private static final int SERVER_PORT = 8189;
 
-    private static final String AUTH_OK_CMD = "/authok";
-    private static final String SEND_TO_NICk = "/w";
+        private String host;
+        private int port;
+        private ObjectInputStream inputStream;
+        private ObjectOutputStream outputStream;
+        private Socket socket;
+        private ClientChat clientChat;
+        private String nickname;
 
-    private String host;
-    private int port;
-    private DataInputStream inputStream;
-    private DataOutputStream outputStream;
-    private Socket socket;
-    private ClientChat clientChat;
-    private String nickname;
-
-    public Network() {
-                this(SERVER_ADDRESS, SERVER_PORT);
-    }
-
-    public Network(String host, int port) {
-        this.host = host;
-        this.port = port;
-    }
-
-    public Network(ClientChat clientChat) {
-        this();
-        this.clientChat = clientChat;
-    }
-
-    public boolean connect() {
-        try {
-            socket = new Socket(host, port);
-            inputStream = new DataInputStream(socket.getInputStream());
-            outputStream = new DataOutputStream(socket.getOutputStream());
-            return true;
-        } catch (IOException e) {
-            System.err.println("Соединение не было установлено!");
-            e.printStackTrace();
-            return false;
+        public Network() {
+            this(SERVER_ADDRESS, SERVER_PORT);
         }
-    }
 
-    public DataInputStream getInputStream() {
-        return inputStream;
-    }
+        public Network(String host, int port) {
+            this.host = host;
+            this.port = port;
+        }
 
-    public DataOutputStream getOutputStream() {
-        return outputStream;
-    }
+        public Network(ClientChat clientChat) {
+            this();
+            this.clientChat = clientChat;
+        }
 
-    public void sendMessage(String message) throws IOException {
-        getOutputStream().writeUTF(message);
+        public boolean connect() {
+            try {
+                socket = new Socket(host, port);
+                outputStream = new ObjectOutputStream(socket.getOutputStream());
+                inputStream = new ObjectInputStream(socket.getInputStream());
+                return true;
+            } catch (IOException e) {
+                System.err.println("Соединение не было установлено!");
+                e.printStackTrace();
+                return false;
+            }
+        }
 
-    }
+        public void sendPrivateMessage(String receiver, String message) throws IOException {
+            sendCommand(privateMessageCommand(receiver, message));
+        }
 
-      public void waitMessages(ViewController viewController) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        public void sendMessage(String message) throws IOException {
+            sendCommand(publicMessageCommand(nickname, message));
+        }
+
+        private void sendCommand(Command command) throws IOException {
+            outputStream.writeObject(command);
+        }
+
+        public void waitMessages(ViewController viewController) {
+            Thread thread = new Thread(() -> {
                 try {
                     while (true) {
-                        String message = inputStream.readUTF();
-                        if (clientChat.getState() == ClientChatState.AUTHENTICATION) {
-                            if (message.startsWith(AUTH_OK_CMD)) {
-                                String[] parts = message.split(" ", 2);
-                                nickname = parts[1];
-                                Platform.runLater(() -> {
-                                    clientChat.activeChatDialog(nickname);
-                                });
-                            }
-
-                            else {
-                                Platform.runLater(() -> {
-                                    ClientChat.showNetworkError(message, "Auth error", null);
-                                });
-                            }
+                        Command command = readCommand();
+                        if (command == null) {
+                            continue;
                         }
-                        else {
 
-                            Platform.runLater(() -> {
-                                viewController.appendMessage(message);
-                            });
+                        if (clientChat.getState() == ClientChatState.AUTHENTICATION) {
+
+                            processAuthResult(command);
+
+                        } else {
+                            processMessage(viewController, command);
                         }
                     }
                 } catch (IOException e) {
-                  //  e.printStackTrace();
+                    e.printStackTrace();
                     System.out.println("Соединение было потеряно!");
                 }
-            }
-        });
-        thread.setDaemon(true);
-        thread.start();
-    }
+            });
+            thread.setDaemon(true);
+            thread.start();
+        }
 
-    public void close() {
-        try {
-            if (socket != null && socket.isConnected()) {
-                socket.close();
+        private void processMessage(ViewController viewController, Command command) {
+            switch (command.getType()) {
+                case INFO_MESSAGE: {
+                    MessageInfoCommandData data = (MessageInfoCommandData) command.getData();
+                    Platform.runLater(() -> {
+                        viewController.appendMessage(data.getMessage());
+                    });
+                    break;
+                }
+                case CLIENT_MESSAGE: {
+                    ClientMessageCommandData data = (ClientMessageCommandData) command.getData();
+                    String sender = data.getSender();
+                    String message = data.getMessage();
+                    Platform.runLater(() -> {
+                        viewController.appendMessage(String.format("%s: %s", sender, message));
+                    });
+                    break;
+                }
+                case ERROR: {
+                    ErrorCommandData data = (ErrorCommandData) command.getData();
+                    Platform.runLater(() -> {
+                        ClientChat.showNetworkError(data.getErrorMessage(), "Server error", null);
+                    });
+                    break;
+                }
+                case UPDATE_USER_LIST: {
+                    UpdateUsersListCommandData data = (UpdateUsersListCommandData) command.getData();
+                    Platform.runLater(() -> {
+                        clientChat.updateUsers(data.getUsers());
+                    });
+                    break;
+                }
+                default:
+                    throw new IllegalArgumentException("Uknown command type: " + command.getType());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+
+        private void processAuthResult(Command command) {
+            switch (command.getType()) {
+                case AUTH_OK: {
+                    AuthOkCommandData data = (AuthOkCommandData) command.getData();
+                    nickname = data.getUsername();
+                    Platform.runLater(() -> {
+                        clientChat.activeChatDialog(nickname);
+                    });
+                    break;
+                }
+                case CLOSE_BY_TIMER:{//Дополнительная служебная команда об ошибке по таймеру
+                    Platform.runLater(() -> {
+                        ClientChat.showNetworkError("Соединение разорвано по таймеру", "Auth error", null);});
+
+
+                    break;
+                }
+
+
+                case ERROR:
+                    ErrorCommandData data = (ErrorCommandData) command.getData();
+                    Platform.runLater(() -> {
+                        ClientChat.showNetworkError(data.getErrorMessage(), "Auth error", null);
+                    });
+                    break;
+                default:
+                    throw new IllegalArgumentException("Uknown command type: " + command.getType());
+            }
+        }
+
+        public void close() {
+            try {
+                if (socket != null && socket.isConnected()) {
+                    socket.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private Command readCommand() throws IOException {
+            Command command = null;
+            try {
+                command = (Command) inputStream.readObject();
+            } catch (ClassNotFoundException e) {
+                System.err.println("Failed to read Command class");
+                e.printStackTrace();
+            }
+
+            return command;
+        }
+
+        public void sendAuthMessage(String login, String password) throws IOException {
+            sendCommand(authCommand(login, password));
         }
     }
-}

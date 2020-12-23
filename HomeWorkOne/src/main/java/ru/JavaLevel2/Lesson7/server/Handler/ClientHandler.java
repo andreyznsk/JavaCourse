@@ -1,120 +1,176 @@
 package ru.JavaLevel2.Lesson7.server.Handler;
 
+import ru.JavaLevel2.Lesson7.ClaintServer.Command;
+import ru.JavaLevel2.Lesson7.ClaintServer.CommandType;
+import ru.JavaLevel2.Lesson7.ClaintServer.commands.AuthCommandData;
+import ru.JavaLevel2.Lesson7.ClaintServer.commands.PrivateMessageCommandData;
+import ru.JavaLevel2.Lesson7.ClaintServer.commands.PublicMessageCommandData;
 import ru.JavaLevel2.Lesson7.server.MyServer;
 
-import java.net.Socket;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static ru.JavaLevel2.Lesson7.ClaintServer.Command.*;
 
 
-    public class ClientHandler {
+public class ClientHandler extends TimerTask {
 
-        private static final String END_CMD = "/end";
-        private static final String AUTH_CMD = "/auth"; // "/auth login password"
-        private static final String AUTH_OK_CMD = "/authok";
-        private static final String PRIVAT_SEND_CMD = "/w";
+    private final MyServer myServer;
+    private final Socket clientSocket;
 
-        private final MyServer myServer;
-        private final Socket clientSocket;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
 
-        private DataInputStream in;
-        private DataOutputStream out;
+    private String nickname;
 
-        private String nickname;
+    @Override
+    public void run() {
+        if(nickname==null) {//если логин не получен закрыть соединение
+            try {
+                sendCommand(CloseByTimer());//Посылаем клиенту команду о разрыве соединения по таймеру
+                System.out.println("Закрыаем соединение");
+                closeConnection();
 
+            } catch (IOException e) {
+                System.err.println("Не смогли прервать подключение");
 
-        public ClientHandler(MyServer myServer, Socket clientSocket) {
-            this.myServer = myServer;
-            this.clientSocket = clientSocket;
+            }
         }
 
-        public void handle() throws IOException {
-            in  = new DataInputStream(clientSocket.getInputStream());
-            out = new DataOutputStream(clientSocket.getOutputStream());
+    }
 
-            new Thread(() -> {
+    public ClientHandler(MyServer myServer, Socket clientSocket) {
+        this.myServer = myServer;
+        this.clientSocket = clientSocket;
+    }
+
+    public void handle() throws IOException {
+        in  = new ObjectInputStream(clientSocket.getInputStream());
+        out = new ObjectOutputStream(clientSocket.getOutputStream());
+
+        new Thread(() -> {
+            try {
+                authentication();
+                readMessages();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
                 try {
-                    authentication();
-                    readMessages();
+                    closeConnection();
                 } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        closeConnection();
-                    } catch (IOException e) {
-                        System.err.println("Failed to close connection!");
-                    }
-                }
-            }).start();
-        }
-
-        private void authentication() throws IOException {
-            while (true) {
-                String message = in.readUTF();
-                if (message.startsWith(AUTH_CMD)) {
-                    String[] parts = message.split(" ", 3);
-                    String login = parts[1];
-                    String password = parts[2];
-                    String nickname = myServer.getAuthService().getNickByLoginPass(login, password);
-                    if (nickname == null) {
-                        out.writeUTF("Некорректные логин или пароль!");
-                        continue;
-                    }
-
-                    if (myServer.isNickBusy(nickname)) {
-                        out.writeUTF("Такой пользователь уже существует!");
-                        continue;
-                    }
-
-                    out.writeUTF(String.format("%s %s", AUTH_OK_CMD, nickname));
-                    setNickname(nickname);
-                    myServer.broadcastMessage(String.format("Пользователь '%s' зашел в чат!", nickname), null);
-                    myServer.subscribe(this);
-                    return;
+                    System.err.println("Failed to close connection!");
                 }
             }
-        }
+        }).start();
+    }
 
-        private void readMessages() throws IOException {
-            while (true) {
-                String message = in.readUTF();
-                System.out.println("message: " + message);
-                if (message.startsWith(END_CMD)) {
-                    return;
-                }
+    private void authentication() throws IOException {
+        TimerTask timerTask = this;
 
-                else if (message.startsWith(PRIVAT_SEND_CMD)) {
-                    System.out.println("send to client: ");
-                    String[] parts = message.split(" ", 3);
-                    String nick = parts[1];
-                    String privatMessage = parts[2];
-                  if(myServer.isNickBusy(nick)) System.out.println("Ник найден посылаем ему сообщение");;
-                    myServer.recipientMeaasge(privatMessage, this, nick);
-                }
+        Timer timer = new Timer(true);
 
-                else {
-                    myServer.broadcastMessage(nickname + ": " + message, this);
-                }
+        timer.schedule(timerTask, 12000);//Запуск отдельного потока, который проверят ести ли логин
+
+        while (true) {
+            Command command = readCommand();
+            if (command == null) {
+                continue;
             }
-        }
 
-        private void closeConnection() throws IOException {
-            myServer.unsubscribe(this);
-            clientSocket.close();
-        }
+            if (command.getType() == CommandType.AUTH) {
+                AuthCommandData data = (AuthCommandData) command.getData();
+                String login = data.getLogin();
+                String password = data.getPassword();
+                String nickname = myServer.getAuthService().getNickByLoginPass(login, password);
+                if (nickname == null) {
+                    sendCommand(errorCommand("Некорректные логин или пароль!"));
+                    continue;
+                }
 
+                if (myServer.isNickBusy(nickname)) {
+                    sendCommand(errorCommand("Такой пользователь уже существует!"));
+                    continue;
+                }
 
-        public void sendMessage(String message) throws IOException {
-            out.writeUTF(message);
-        }
-
-        public String getNickname() {
-            return nickname;
-        }
-
-        private void setNickname(String nickname) {
-            this.nickname = nickname;
+                sendCommand(authOkCommand(nickname));
+                setNickname(nickname);
+                myServer.broadcastMessage(String.format("Пользователь '%s' зашел в чат!", nickname), null);
+                myServer.subscribe(this);
+                return;
+            }
         }
     }
+
+    public void sendCommand(Command command) throws IOException {
+        out.writeObject(command);
+    }
+
+    private Command readCommand() throws IOException {
+        Command command = null;
+        try {
+            command = (Command) in.readObject();
+        } catch (ClassNotFoundException e) {
+            System.err.println("Failed to read Command class");
+            e.printStackTrace();
+        }
+
+        return command;
+    }
+
+    private void readMessages() throws IOException {
+        while (true) {
+            Command command = readCommand();
+            if (command == null) {
+                continue;
+            }
+
+            switch (command.getType()) {
+                case PRIVATE_MESSAGE: {
+                    PrivateMessageCommandData data = (PrivateMessageCommandData) command.getData();
+                    String receiver = data.getReceiver();
+                    String message = data.getMessage();
+                    myServer.sendPrivateMessage(this, receiver, message);
+                    break;
+                }
+                case PUBLIC_MESSAGE: {
+                    PublicMessageCommandData data = (PublicMessageCommandData) command.getData();
+                    String message = data.getMessage();
+                    myServer.broadcastMessage(message, this);
+                    break;
+                }
+                case END:
+                    return;
+                default:
+                    throw new IllegalArgumentException("Unknown command type: " + command.getType());
+
+            }
+        }
+    }
+
+    private void closeConnection() throws IOException {
+        myServer.unsubscribe(this);
+        clientSocket.close();
+    }
+
+
+    public void sendMessage(String message) throws IOException {
+        sendCommand(Command.messageInfoCommand(message));
+    }
+
+    public void sendMessage(String sender, String message) throws IOException {
+        sendCommand(clientMessageCommand(message, sender));
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    private void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+}
 
