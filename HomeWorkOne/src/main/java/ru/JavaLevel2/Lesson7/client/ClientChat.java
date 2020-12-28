@@ -20,12 +20,30 @@ import java.util.List;
 public class ClientChat extends Application {
 
     public static final List<String> USERS_TEST_DATA = new ArrayList<>();
+    private Stage regDialogStage;
 
     private ClientChatState state = ClientChatState.AUTHENTICATION;
     private Stage primaryStage;
     private Stage authDialogStage;
+
     private Network network;
     private ViewController viewController;
+
+   /* public static void openRegDialog() throws IOException{
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(ClientChat.class.getResource("/regDialog.fxml"));
+        AnchorPane parent = loader.load();
+
+        regDialogStage = new Stage();
+        regDialogStage.initModality(Modality.WINDOW_MODAL);
+        regDialogStage.initOwner(primaryStage);
+
+        AuthController authController = loader.getController();
+        authController.setNetwork(network);
+
+        regDialogStage.setScene(new Scene(parent));
+        regDialogStage.show();
+    }*/
 
     public void updateUsers(List<String> users) {
         viewController.usersList.setItems(FXCollections.observableList(users));
