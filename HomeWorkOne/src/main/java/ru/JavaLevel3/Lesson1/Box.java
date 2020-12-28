@@ -9,12 +9,12 @@ public class Box <T extends Fruit> {
         box = new ArrayList<>();
     }
 
-    public void addFruit(Fruit a){
-        box.add((T) a);
+    public void addFruit(T a){
+        box.add(a);
     }
 
     public float getWeight (){
-        if(this.box == null)
+        if(this.box == null||this.box.size()==0)
             return 0;
 
 
@@ -23,17 +23,16 @@ public class Box <T extends Fruit> {
     }
 
     public boolean compare (Box<?> second){
-        if(Math.abs(this.getWeight() - second.getWeight()) < 0.0001) return true;
-        else return false;
+       return  (Math.abs(this.getWeight() - second.getWeight()) < 0.0001);
+
     }
 
     public void intersperse(Box<T> source){
+        if (this == source) return;
 
-        for (int i = 0; i < source.box.size(); i++) {
-            this.addFruit(source.box.get(i));
-        }
+        this.box.addAll(source.box);
 
-        source.box = null;
+        source.box.clear();
 
     }
 
