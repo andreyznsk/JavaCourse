@@ -2,9 +2,8 @@ package ru.JavaLevel2.Lesson7.client;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import ru.JavaLevel2.Lesson7.client.models.Network;
 
@@ -13,14 +12,17 @@ import java.io.IOException;
 public class ViewController {
 
     @FXML
+    public ListView<String> usersList;
+
+    @FXML
     private TextArea chatHistory;
     @FXML
     private TextField textField;
     private Network network;
     private Stage primaryStage;
-    @FXML
-    private ListView usersList;
+
    // private ListView<String> usersList;
+   private String selectedRecipient;
 
 
     @FXML
@@ -31,7 +33,28 @@ public class ViewController {
 
 
         usersList.setItems(FXCollections.observableArrayList(ClientChat.USERS_TEST_DATA));
-        textField.requestFocus();
+
+        usersList.setCellFactory(lv -> {
+            MultipleSelectionModel<String> selectionModel = usersList.getSelectionModel();
+            ListCell<String> cell = new ListCell<>();
+            cell.textProperty().bind(cell.itemProperty());
+            cell.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                usersList.requestFocus();
+                if (! cell.isEmpty()) {
+                    int index = cell.getIndex();
+                    if (selectionModel.getSelectedIndices().contains(index)) {
+                        selectionModel.clearSelection(index);
+                        selectedRecipient = null;
+                    } else {
+                        selectionModel.select(index);
+                        selectedRecipient = cell.getItem();
+                    }
+                    event.consume();
+                }
+            });
+            return cell ;
+        });
+
     }
 
     @FXML
@@ -41,7 +64,11 @@ public class ViewController {
         textField.clear();
 
         try {
-            network.sendMessage(message);
+            if (selectedRecipient != null) {
+                network.sendPrivateMessage(selectedRecipient, message);
+            } else {
+                network.sendMessage(message);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             String errorMessage = "Failed to send message";
