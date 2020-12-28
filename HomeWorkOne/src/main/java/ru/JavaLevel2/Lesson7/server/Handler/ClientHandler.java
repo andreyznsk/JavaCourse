@@ -17,7 +17,7 @@ import java.util.TimerTask;
 import static ru.JavaLevel2.Lesson7.ClaintServer.Command.*;
 
 
-public class ClientHandler extends TimerTask {
+public class ClientHandler {
 
     private final MyServer myServer;
     private final Socket clientSocket;
@@ -27,7 +27,7 @@ public class ClientHandler extends TimerTask {
 
     private String nickname;
 
-    @Override
+    /*@Override
     public void run() {
         if(nickname==null) {//если логин не получен закрыть соединение
             try {
@@ -41,7 +41,7 @@ public class ClientHandler extends TimerTask {
             }
         }
 
-    }
+    }*/
 
     public ClientHandler(MyServer myServer, Socket clientSocket) {
         this.myServer = myServer;
@@ -69,7 +69,22 @@ public class ClientHandler extends TimerTask {
     }
 
     private void authentication() throws IOException {
-        TimerTask timerTask = this;
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if(nickname==null) {//если логин не получен закрыть соединение
+                    try {
+                        sendCommand(closeByTimer());//Посылаем клиенту команду о разрыве соединения по таймеру
+                        System.out.println("Закрыаем соединение");
+                        closeConnection();
+
+                    } catch (IOException e) {
+                        System.err.println("Не смогли прервать подключение");
+
+                    }
+                }
+            }
+        };
 
         Timer timer = new Timer(true);
 

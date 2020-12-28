@@ -73,7 +73,7 @@ public class Command implements Serializable {
         return command;
     }
 
-    public static Command CloseByTimer() {//Команда выход по таймеру
+    public static Command closeByTimer() {//Команда выход по таймеру
         Command command = new Command();
         command.type = CommandType.CLOSE_BY_TIMER;
         return command;
