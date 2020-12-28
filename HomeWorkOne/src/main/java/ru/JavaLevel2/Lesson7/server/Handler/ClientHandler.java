@@ -88,7 +88,7 @@ public class ClientHandler {
 
         Timer timer = new Timer(true);
 
-        timer.schedule(timerTask, 12000);//Запуск отдельного потока, который проверят ести ли логин
+        timer.schedule(timerTask, 120000);//Запуск отдельного потока, который проверят ести ли логин
 
         while (true) {
             Command command = readCommand();

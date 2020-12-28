@@ -97,7 +97,7 @@ public class MyServer {
         }
 
         for (ClientHandler client : clients) {
-//            List<String> usernames = clients.stream()
+//            List<String> usernames = clients.stream() Какойто- странный способ, может удалить его?
 //                    .map(ClientHandler::getNickname)
 //                    .collect(Collectors.toList());
 
