@@ -6,4 +6,6 @@ public interface AuthService {
 
     String getNickByLoginPass(String login, String password);
 
+    void registration(String login, String password, String nickname);
+
 }

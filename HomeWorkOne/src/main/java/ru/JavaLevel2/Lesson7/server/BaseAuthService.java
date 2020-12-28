@@ -6,9 +6,11 @@ public class BaseAuthService implements AuthService {
         private static Connection connection;
         private static Statement stmt;
         private static PreparedStatement psSelect;
+        private static PreparedStatement psInsert;
 
         private static void prepareAllStatements() throws SQLException {
             psSelect = connection.prepareStatement("SELECT nickname FROM users WHERE login = ? AND password = ?;");
+            psInsert = connection.prepareStatement("INSERT INTO users (login,password,nickname) VALUES(?,?,?)");
         }
 
         private static void connect() throws Exception {
@@ -66,8 +68,7 @@ public class BaseAuthService implements AuthService {
 
         @Override
         public String getNickByLoginPass(String login, String password) {//Изменил на метод идентификации из БД.
-            /*User requestedUser = new User(login, password, null);
-            return USERS.get(requestedUser);*/
+
             try {//Блок провеки через подготовленный запрос
                 psSelect.setString(1,login);
                 psSelect.setString(2,password);
@@ -83,5 +84,26 @@ public class BaseAuthService implements AuthService {
             }
             return null;
         }
+
+    @Override
+    public void registration(String login, String password, String nickname) {
+        try {//Блок провеки через подготовленный запрос
+            psInsert.setString(1,login);
+            psInsert.setString(2,password);
+            psInsert.setString(3,nickname);
+            System.out.printf("Login: %s\npassword: %s\nNickname: %s",login,password,nickname);
+            //psInsert.executeUpdate();
+            ResultSet rs = psSelect.executeQuery();
+            while (rs.next()){
+                System.out.println(rs.getString("nickname"));
+
+            }
+
+        } catch (SQLException throwables) {
+            System.err.println(throwables);
+            throwables.printStackTrace();
+        }
+
     }
+}
 

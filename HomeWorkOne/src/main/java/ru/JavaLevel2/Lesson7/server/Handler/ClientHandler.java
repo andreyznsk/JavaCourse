@@ -96,6 +96,8 @@ public class ClientHandler {
                 continue;
             }
 
+
+
             if (command.getType() == CommandType.AUTH) {
                 AuthCommandData data = (AuthCommandData) command.getData();
                 String login = data.getLogin();

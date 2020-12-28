@@ -184,4 +184,10 @@ public class Network {
         public void sendAuthMessage(String login, String password) throws IOException {
             sendCommand(authCommand(login, password));
         }
+
+    public void sendRegMessage(String login) throws IOException {
+        System.out.printf("Login: %s\npassword: %s\nNickname: %s",login);
+            //sendCommand(regCommand(login, password, nickname));
+
     }
+}

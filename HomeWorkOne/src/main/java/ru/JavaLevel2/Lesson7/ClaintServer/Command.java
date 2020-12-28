@@ -79,6 +79,12 @@ public class Command implements Serializable {
         return command;
     }
 
+    public static Command regCommand(String login,String password,String nickname ) {
+        Command command = new Command();
+        command.type = CommandType.REGISTRATION;
+        command.data = new AuthRegData(login, password, nickname);
+        return command;
+    }
 
 
 

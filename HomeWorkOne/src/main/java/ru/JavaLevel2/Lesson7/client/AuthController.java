@@ -65,7 +65,7 @@ public class AuthController {
             regStage.initModality(Modality.APPLICATION_MODAL);
 
             regController = fxmlLoader.getController();
-            regController.setController(this);
+            regController.setController(this, network);
 
         } catch (IOException e) {
             e.printStackTrace();
