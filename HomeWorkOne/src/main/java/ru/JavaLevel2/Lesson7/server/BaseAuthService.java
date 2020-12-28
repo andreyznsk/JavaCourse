@@ -32,12 +32,7 @@ public class BaseAuthService implements AuthService {
         }
 
 
-            /*private static Map<User, String> USERS = null; = Map.of(
-                new User("login1", "pass1", "Peter"), "Peter",
-                new User("login2", "pass2", "Alexey"), "Alexey",
-                new User("login3", "pass3", "Oleg"), "Oleg"
-        );
-*/
+           // private static Map<User, String> USERS = null;
 
         @Override
         public void start() {
