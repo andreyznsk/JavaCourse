@@ -53,6 +53,7 @@ public class AuthController {
 
     public void setNetwork(Network network) {
         this.network = network;
+        regController.setNetwork(network);
     }
 
     private void createRegWindow() {
@@ -65,7 +66,7 @@ public class AuthController {
             regStage.initModality(Modality.APPLICATION_MODAL);
 
             regController = fxmlLoader.getController();
-            regController.setController(this, network);
+            regController.setController(this);
 
         } catch (IOException e) {
             e.printStackTrace();

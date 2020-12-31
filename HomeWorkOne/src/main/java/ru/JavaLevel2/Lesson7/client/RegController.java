@@ -6,8 +6,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ru.JavaLevel2.Lesson7.client.models.Network;
 
-import java.io.IOException;
-
 public class RegController {
 
   //  private static final String AUTH_CMD = "/auth"; // "/auth login password"
@@ -46,9 +44,12 @@ public class RegController {
         }*/
     }
 
-    public void setController(AuthController controller, Network network) {
-        this.network = network;
+    public void setController(AuthController controller) {
+        //this.network = network;
         this.controller = controller;
     }
 
+    public void setNetwork(Network network) {
+        this.network = network;
+    }
 }

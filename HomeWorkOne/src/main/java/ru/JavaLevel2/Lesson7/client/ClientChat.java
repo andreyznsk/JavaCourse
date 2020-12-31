@@ -20,11 +20,13 @@ import java.util.List;
 public class ClientChat extends Application {
 
     public static final List<String> USERS_TEST_DATA = new ArrayList<>();
-    private Stage regDialogStage;
+    private Stage regStage;
+    private RegController regController;
 
     private ClientChatState state = ClientChatState.AUTHENTICATION;
     private Stage primaryStage;
     private Stage authDialogStage;
+
 
     private Network network;
     private ViewController viewController;
@@ -81,7 +83,7 @@ public class ClientChat extends Application {
             }
             network.close();
         });
-
+        //regController.setNetwork(network);
         openAuthDialog();
     }
 
