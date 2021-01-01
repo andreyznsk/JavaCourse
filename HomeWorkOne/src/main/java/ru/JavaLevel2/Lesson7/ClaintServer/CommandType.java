@@ -13,6 +13,7 @@ public enum CommandType {
     CLOSE_BY_TIMER,
     REGISTRATION,
     CREATE_NEW_USER,
-    UPDATE_USER
+    UPDATE_USER,
+    CONFIRMATION
 
 }

@@ -8,12 +8,13 @@ public class DataBaseAuthService implements AuthService {
     private static PreparedStatement psSelect;
     private static PreparedStatement psInsert;
     private static PreparedStatement psUpdate;
+    private static PreparedStatement psSelectAllNick;
 
     private static void prepareAllStatements() throws SQLException {
         psSelect = connection.prepareStatement("SELECT nickname FROM users WHERE login = ? AND password = ?;");
-        //psUpdate = connection.prepareStatement("UPDATE nickname FROM users WHERE login = ? AND password = ?;");
+        psUpdate = connection.prepareStatement("UPDATE users SET nickname = ? WHERE login = ? AND password = ?");
         psInsert = connection.prepareStatement("INSERT INTO users (login,password,nickname) VALUES(?,?,?)");
-
+        psSelectAllNick = connection.prepareStatement("SELECT nickname, login FROM users");
     }
 
     private static void connect() throws Exception {
@@ -37,17 +38,10 @@ public class DataBaseAuthService implements AuthService {
     }
 
 
-    // private static Map<User, String> USERS = null;
-
     @Override
     public void start() {
         System.out.println("Auth service is running");
-           /* USERS = new HashMap<>();
-            USERS.put(new User("2","2","Perter"), "Peter");
-            USERS.put(new User("3","3","Alexey"), "Alexey");
-            USERS.put(new User("4","4","Oleg"), "Oleg");
-            USERS.put(new User("1","1","Andreyz"), "Andreyz");
-*/
+
         try {
             connect();
             prepareAllStatements();
@@ -89,21 +83,82 @@ public class DataBaseAuthService implements AuthService {
     }
 
     @Override
-    public void registration(String login, String password, String nickname) {
+    public int insertUser(String login, String password, String nickname) {
         try {//Блок провеки через подготовленный запрос
-            psInsert.setString(1,login);
-            psInsert.setString(2,password);
-            psInsert.setString(3,nickname);
-            System.out.printf("Login: %s\npassword: %s\nNickname: %s",login,password,nickname);
+            psInsert.setString(1,nickname);
+            psInsert.setString(2,login);
+            psInsert.setString(3,password);
+            //System.out.printf("Login: %s\npassword: %s\nNickname: %s\n",login,password,nickname);
 
-            //psInsert.executeUpdate();
-            //ResultSet rs = psSelect.executeQuery();
+            ResultSet rs = psSelectAllNick.executeQuery();
+            String dataBaseNick;
+            String dataBaseLogin;
 
+            while (rs.next()){
+
+                dataBaseNick = rs.getString("nickname");
+                dataBaseLogin = rs.getString("login");
+                System.out.println("nick: " + dataBaseNick);
+                System.out.println("login: " + dataBaseLogin);
+                if (dataBaseNick.equals(nickname)||dataBaseLogin.equals(login)) {
+                    System.out.printf("Error, Nick or Login exists");
+                   return 0;
+                }
+            }
+
+            if(psInsert.executeUpdate()==1) {
+                System.out.println("Insert is OK");
+                return 1;
+            }
+
+                //ResultSet rs = psSelect.executeQuery();
 
         } catch (SQLException throwables) {
             System.err.println(throwables);
             throwables.printStackTrace();
         }
+
+        return 0;
+    }
+
+    @Override
+    public int updateUser(String login, String password, String nickname) {
+        try {//Блок провеки через подготовленный запрос
+            psUpdate.setString(1,login);
+            psUpdate.setString(2,password);
+            psUpdate.setString(3,nickname);
+            //System.out.printf("Login: %s\npassword: %s\nNickname: %s\n",login,password,nickname);
+
+           /* ResultSet rs = psSelectAllNick.executeQuery();
+            String dataBaseNick;
+            String dataBaseLogin;
+
+            while (rs.next()){
+
+                dataBaseNick = rs.getString("nickname");
+                dataBaseLogin = rs.getString("login");
+                System.out.println("nick: " + dataBaseNick);
+                System.out.println("login: " + dataBaseLogin);
+                if (dataBaseNick.equals(nickname)||dataBaseLogin.equals(login)) {
+                    System.out.printf("Error, Nick or Login exists");
+                    return 0;
+                }
+            }*/
+
+            if(psUpdate.executeUpdate()==1) {
+                System.out.println("Update is OK");
+                return 1;
+            }
+
+            //ResultSet rs = psSelect.executeQuery();
+
+        } catch (SQLException throwables) {
+            System.err.println(throwables);
+            throwables.printStackTrace();
+        }
+
+        return 0;
+
 
     }
 }

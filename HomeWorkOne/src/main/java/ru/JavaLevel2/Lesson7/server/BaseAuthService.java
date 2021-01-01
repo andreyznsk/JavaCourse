@@ -8,17 +8,7 @@ import java.util.Map;
 public class BaseAuthService implements AuthService {
 
     private static Map<User, String> USERS = null;
-    private static Connection connection;
 
-    private static void disconnect() {
-
-        try {
-
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
         @Override
         public void start() {
             System.out.println("Auth service is running");
@@ -33,21 +23,27 @@ public class BaseAuthService implements AuthService {
         @Override
         public void stop() {
             System.out.println("Auth service has been stopped");
-            disconnect();
+
         }
 
         @Override
         public String getNickByLoginPass(String login, String password) {//Изменил на метод идентификации из БД.
 
+            return USERS.get(new User(login, password, null));
 
-            return null;
         }
 
     @Override
-    public void registration(String login, String password, String nickname) {
-
-        }
-
+    public int insertUser(String login, String password, String nickname) {
+        System.out.println("Can`t create new User, cause not dataBase");
+        return 0;
     }
+
+    @Override
+    public int updateUser(String login, String password, String nickname) {
+        System.out.println("Can`t update User, cause not dataBase");
+        return 0;
+    }
+}
 
 

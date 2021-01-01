@@ -69,6 +69,7 @@ public class AuthController {
             regController.setController(this);
 
         } catch (IOException e) {
+
             e.printStackTrace();
         }
 

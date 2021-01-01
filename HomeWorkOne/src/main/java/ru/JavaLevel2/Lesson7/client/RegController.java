@@ -61,6 +61,7 @@ public class RegController {
             ClientChat.showNetworkError(e.getMessage(), "Auth error!", null);
             e.printStackTrace();
         }
+
     }
 
     public void setController(AuthController controller) {

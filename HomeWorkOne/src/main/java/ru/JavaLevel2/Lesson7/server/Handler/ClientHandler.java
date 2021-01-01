@@ -54,7 +54,7 @@ public class ClientHandler {
     }
 
     private void authentication() throws IOException {
-        /*TimerTask timerTask = new TimerTask() {
+        TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 if(nickname==null) {//если логин не получен закрыть соединение
@@ -70,10 +70,10 @@ public class ClientHandler {
                 }
             }
         };
-*/
-        //Timer timer = new Timer(true);
 
-        //timer.schedule(timerTask, 120000);//Запуск отдельного потока, который проверят ести ли логин
+        Timer timer = new Timer(true);
+
+        timer.schedule(timerTask, 120000);//Запуск отдельного потока, который проверят ести ли логин
 
         while (true) {
             Command command = readCommand();
@@ -86,8 +86,22 @@ public class ClientHandler {
                 String login = data.getLogin();
                 String password = data.getPassword();
                 String nickname = data.getNickname();
-                System.out.println("Create new User");
-                System.out.printf("Login: %s\npassword: %s\nNickname: %s\n",login, password, nickname);
+                if (myServer.getAuthService().insertUser(login,password,nickname)==0) {
+                    sendCommand(errorCommand("Такой ник уже есть!!"));
+                    continue;
+                } else sendCommand(confirmationCommand("Регистрация прошла успешно!"));
+            }
+
+            if(command.getType() == CommandType.UPDATE_USER) {
+                AuthRegData data = (AuthRegData) command.getData();
+                String login = data.getLogin();
+                String password = data.getPassword();
+                String nickname = data.getNickname();
+
+                if (myServer.getAuthService().updateUser(login,password,nickname)==0) {
+                    sendCommand(errorCommand("Логин или пароль некорркетны!"));
+                    continue;
+                } else sendCommand(confirmationCommand("Ник успешно изменен."));
             }
 
 
@@ -102,7 +116,7 @@ public class ClientHandler {
                 }
 
                 if (myServer.isNickBusy(nickname)) {
-                    sendCommand(errorCommand("Такой пользователь уже существует!"));
+                    sendCommand(errorCommand("Такой пользователь уже вошел в чат!"));
                     continue;
                 }
 

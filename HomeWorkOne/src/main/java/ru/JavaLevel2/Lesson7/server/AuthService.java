@@ -6,6 +6,10 @@ public interface AuthService {
 
     String getNickByLoginPass(String login, String password);
 
-    void registration(String login, String password, String nickname);
+    int insertUser(String login, String password, String nickname);
+
+    int updateUser(String login, String password, String nickname);
+
+
 
 }

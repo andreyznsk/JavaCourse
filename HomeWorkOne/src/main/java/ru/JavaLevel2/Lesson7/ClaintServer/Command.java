@@ -38,6 +38,13 @@ public class Command implements Serializable {
         command.data = new ErrorCommandData(errorMessage);
         return command;
     }
+    public static Command confirmationCommand(String errorMessage) {
+        Command command = new Command();
+        command.type = CommandType.CONFIRMATION;
+        command.data = new ErrorCommandData(errorMessage);
+        return command;
+    }
+
 
     public static Command messageInfoCommand(String message) {
         Command command = new Command();

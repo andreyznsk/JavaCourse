@@ -102,9 +102,21 @@ public class ClientChat extends Application {
         authDialogStage.setScene(new Scene(parent));
         authDialogStage.show();
     }
+    public static void showNetworkConfirmation(String errorDetails, String errorTitle, Stage dialogStage) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+
+        if (dialogStage != null) {
+            alert.initOwner(dialogStage);
+        }
+        alert.setTitle("Successful");
+        alert.setHeaderText(errorTitle);
+        alert.setContentText(errorDetails);
+        alert.showAndWait();
+    }
 
     public static void showNetworkError(String errorDetails, String errorTitle, Stage dialogStage) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
+
         if (dialogStage != null) {
             alert.initOwner(dialogStage);
         }

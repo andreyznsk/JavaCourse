@@ -135,6 +135,7 @@ public class Network {
                     AuthOkCommandData data = (AuthOkCommandData) command.getData();
                     nickname = data.getUsername();
                     Platform.runLater(() -> {
+                        ClientChat.showNetworkConfirmation("Регистрация прошла успешно", "Успешно", null);
                         clientChat.activeChatDialog(nickname);
                     });
                     break;
@@ -152,6 +153,13 @@ public class Network {
                     ErrorCommandData data = (ErrorCommandData) command.getData();
                     Platform.runLater(() -> {
                         ClientChat.showNetworkError(data.getErrorMessage(), "Auth error", null);
+                    });
+                    break;
+
+                case CONFIRMATION:
+                    //ErrorCommandData data = (ErrorCommandData) command.getData();
+                    Platform.runLater(() -> {
+                        ClientChat.showNetworkConfirmation("Регистрация прошла успешно", "Успешно", null);
                     });
                     break;
                 default:
@@ -186,8 +194,7 @@ public class Network {
         }
 
     public void sendNewUserCommand(String login, String password, String nickname) throws IOException {
-        //System.out.printf("Login: %s\npassword: %s\nNickname: %s",login, password, nickname);
-        System.out.println("Send Command: create new User");
+
             sendCommand(regNewUserCommand(login, password, nickname));
 
     }
