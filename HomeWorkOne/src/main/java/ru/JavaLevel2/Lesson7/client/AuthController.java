@@ -61,7 +61,7 @@ public class AuthController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/regDialog.fxml"));
             Parent root = fxmlLoader.load();
             regStage = new Stage();
-            regStage.setTitle("СпэйсЧат Регистрация");
+            regStage.setTitle("Регистрация");
             regStage.setScene(new Scene(root, 350, 300));
             regStage.initModality(Modality.APPLICATION_MODAL);
 

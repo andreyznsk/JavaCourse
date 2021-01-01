@@ -1,6 +1,8 @@
 package ru.JavaLevel2.Lesson7.ClaintServer.commands;
 
-public class AuthRegData {
+import java.io.Serializable;
+
+public class AuthRegData implements Serializable {
 
         private final String login;
         private final String password;

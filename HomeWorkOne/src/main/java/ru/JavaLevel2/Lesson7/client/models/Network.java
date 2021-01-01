@@ -185,9 +185,15 @@ public class Network {
             sendCommand(authCommand(login, password));
         }
 
-    public void sendRegMessage(String login) throws IOException {
-        System.out.printf("Login: %s\npassword: %s\nNickname: %s",login);
-            //sendCommand(regCommand(login, password, nickname));
+    public void sendNewUserCommand(String login, String password, String nickname) throws IOException {
+        //System.out.printf("Login: %s\npassword: %s\nNickname: %s",login, password, nickname);
+        System.out.println("Send Command: create new User");
+            sendCommand(regNewUserCommand(login, password, nickname));
+
+    }
+
+    public void sendUpdateUserCommand(String login, String password, String nickname) throws IOException {
+        sendCommand(regUpdateUserCommand(login, password, nickname));
 
     }
 }

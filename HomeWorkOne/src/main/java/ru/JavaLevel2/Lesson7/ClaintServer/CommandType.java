@@ -11,6 +11,8 @@ public enum CommandType {
     UPDATE_USER_LIST,
     CLIENT_MESSAGE,
     CLOSE_BY_TIMER,
-    REGISTRATION
+    REGISTRATION,
+    CREATE_NEW_USER,
+    UPDATE_USER
 
 }

@@ -3,6 +3,7 @@ package ru.JavaLevel2.Lesson7.server.Handler;
 import ru.JavaLevel2.Lesson7.ClaintServer.Command;
 import ru.JavaLevel2.Lesson7.ClaintServer.CommandType;
 import ru.JavaLevel2.Lesson7.ClaintServer.commands.AuthCommandData;
+import ru.JavaLevel2.Lesson7.ClaintServer.commands.AuthRegData;
 import ru.JavaLevel2.Lesson7.ClaintServer.commands.PrivateMessageCommandData;
 import ru.JavaLevel2.Lesson7.ClaintServer.commands.PublicMessageCommandData;
 import ru.JavaLevel2.Lesson7.server.MyServer;
@@ -26,22 +27,6 @@ public class ClientHandler {
     private ObjectOutputStream out;
 
     private String nickname;
-
-    /*@Override
-    public void run() {
-        if(nickname==null) {//если логин не получен закрыть соединение
-            try {
-                sendCommand(CloseByTimer());//Посылаем клиенту команду о разрыве соединения по таймеру
-                System.out.println("Закрыаем соединение");
-                closeConnection();
-
-            } catch (IOException e) {
-                System.err.println("Не смогли прервать подключение");
-
-            }
-        }
-
-    }*/
 
     public ClientHandler(MyServer myServer, Socket clientSocket) {
         this.myServer = myServer;
@@ -69,7 +54,7 @@ public class ClientHandler {
     }
 
     private void authentication() throws IOException {
-        TimerTask timerTask = new TimerTask() {
+        /*TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 if(nickname==null) {//если логин не получен закрыть соединение
@@ -85,10 +70,10 @@ public class ClientHandler {
                 }
             }
         };
+*/
+        //Timer timer = new Timer(true);
 
-        Timer timer = new Timer(true);
-
-        timer.schedule(timerTask, 120000);//Запуск отдельного потока, который проверят ести ли логин
+        //timer.schedule(timerTask, 120000);//Запуск отдельного потока, который проверят ести ли логин
 
         while (true) {
             Command command = readCommand();
@@ -96,6 +81,14 @@ public class ClientHandler {
                 continue;
             }
 
+            if(command.getType() == CommandType.CREATE_NEW_USER) {
+                AuthRegData data = (AuthRegData) command.getData();
+                String login = data.getLogin();
+                String password = data.getPassword();
+                String nickname = data.getNickname();
+                System.out.println("Create new User");
+                System.out.printf("Login: %s\npassword: %s\nNickname: %s\n",login, password, nickname);
+            }
 
 
             if (command.getType() == CommandType.AUTH) {
