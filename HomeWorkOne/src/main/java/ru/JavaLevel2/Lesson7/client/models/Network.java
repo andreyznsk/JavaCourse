@@ -149,12 +149,13 @@ public class Network {
                 }
 
 
-                case ERROR:
+                case ERROR: {
                     ErrorCommandData data = (ErrorCommandData) command.getData();
                     Platform.runLater(() -> {
                         ClientChat.showNetworkError(data.getErrorMessage(), "Auth error", null);
                     });
                     break;
+                }
 
                 case CONFIRMATION:
                     //ErrorCommandData data = (ErrorCommandData) command.getData();
@@ -162,6 +163,14 @@ public class Network {
                         ClientChat.showNetworkConfirmation("Регистрация прошла успешно", "Успешно", null);
                     });
                     break;
+
+                case UPDATE_USER_LIST: {
+                        UpdateUsersListCommandData data = (UpdateUsersListCommandData) command.getData();
+                        Platform.runLater(() -> {
+                            clientChat.updateUsers(data.getUsers());
+                        });
+                        break;
+                    }
                 default:
                     throw new IllegalArgumentException("Uknown command type: " + command.getType());
             }
