@@ -16,7 +16,7 @@ public class MyServer {
     private final AuthService authService;
 
     public MyServer() {
-        this.authService = new BaseAuthService();
+        this.authService = new DataBaseAuthService();
     }
 
     public void start(int port) throws IOException {
