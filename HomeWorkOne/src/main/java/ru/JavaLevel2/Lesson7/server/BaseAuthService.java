@@ -1,13 +1,11 @@
 package ru.JavaLevel2.Lesson7.server;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class BaseAuthService implements AuthService {
 
     private static Map<User, String> USERS = null;
-
 
         @Override
         public void start() {
@@ -27,19 +25,19 @@ public class BaseAuthService implements AuthService {
 
         @Override
         public String getNickByLoginPass(String login, String password) {//Изменил на метод идентификации из БД.
-            return USERS.get(new User(login, password, null));
 
+            return USERS.get(new User(login, password, null));
         }
 
     @Override
     public int insertUser(String login, String password, String nickname) {
-        System.out.println("Can`t create new User, cause not dataBase");
-        return 0;
+        System.out.println("Wrong Class!");
+            return 0;
     }
 
     @Override
     public int updateUser(String login, String password, String nickname) {
-        System.out.println("Can`t update User, cause not dataBase");
+        System.out.println("Wrong Class!");
         return 0;
     }
 }
