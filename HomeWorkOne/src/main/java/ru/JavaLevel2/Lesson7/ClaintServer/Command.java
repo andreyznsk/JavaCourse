@@ -38,6 +38,13 @@ public class Command implements Serializable {
         command.data = new ErrorCommandData(errorMessage);
         return command;
     }
+    public static Command confirmationCommand(String errorMessage) {
+        Command command = new Command();
+        command.type = CommandType.CONFIRMATION;
+        command.data = new ErrorCommandData(errorMessage);
+        return command;
+    }
+
 
     public static Command messageInfoCommand(String message) {
         Command command = new Command();
@@ -79,7 +86,19 @@ public class Command implements Serializable {
         return command;
     }
 
+    public static Command regNewUserCommand(String login,String password,String nickname ) {
+        Command command = new Command();
+        command.type = CommandType.CREATE_NEW_USER;
+        command.data = new AuthRegData(login, password, nickname);
+        return command;
+    }
 
+    public static Command regUpdateUserCommand(String login,String password,String nickname ) {
+        Command command = new Command();
+        command.type = CommandType.UPDATE_USER;
+        command.data = new AuthRegData(login, password, nickname);
+        return command;
+    }
 
 
 }
