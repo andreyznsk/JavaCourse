@@ -186,7 +186,7 @@ public class ClientHandler {
     }
 
     public void sendMessage(String sender, String message) throws IOException {
-        sendCommand(clientMessageCommand(message, sender));
+        sendCommand(clientMessageCommand(sender, message));
     }
 
     public String getNickname() {

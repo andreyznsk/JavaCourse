@@ -26,6 +26,7 @@ public class Network {
         private Socket socket;
         private ClientChat clientChat;
         private String nickname;
+        private ChatHistoryBuilder historyBuilder;
 
         public Network() {
             this(SERVER_ADDRESS, SERVER_PORT);
@@ -84,7 +85,7 @@ public class Network {
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                   close();
                     System.out.println("Соединение было потеряно!");
                 }
             });
@@ -177,6 +178,7 @@ public class Network {
         }
 
         public void close() {
+            historyBuilder.closeChatHistoryFile();
             try {
                 if (socket != null && socket.isConnected()) {
                     socket.close();
@@ -211,5 +213,9 @@ public class Network {
     public void sendUpdateUserCommand(String login, String password, String nickname) throws IOException {
         sendCommand(regUpdateUserCommand(login, password, nickname));
 
+    }
+
+    public void setHistoryBuilder(ChatHistoryBuilder historyBuilder) {
+            this.historyBuilder = historyBuilder;
     }
 }

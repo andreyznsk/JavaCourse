@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import ru.JavaLevel2.Lesson7.client.models.ChatHistoryBuilder;
 import ru.JavaLevel2.Lesson7.client.models.Network;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class ViewController {
 
    // private ListView<String> usersList;
    private String selectedRecipient;
+   private ChatHistoryBuilder historyBuilder;
 
 
     @FXML
@@ -31,7 +33,7 @@ public class ViewController {
 //        sendButton.setOnAction(event -> sendMessage());
 //        textField.setOnAction(event -> sendMessage());
 
-
+        //chatHistory.appendText(historyBuilder.readChatHistory());
         usersList.setItems(FXCollections.observableArrayList(ClientChat.USERS_TEST_DATA));
 
         usersList.setCellFactory(lv -> {
@@ -81,6 +83,7 @@ public class ViewController {
     }
 
     public void appendMessage(String message) {
+        historyBuilder.writeChatHistory(message);
         chatHistory.appendText(message);
         chatHistory.appendText(System.lineSeparator());
     }
@@ -92,4 +95,12 @@ public class ViewController {
     public TextField getTextField() {
         return textField;
     }
+
+    public void setHistoryBuilder(ChatHistoryBuilder historyBuilder) {
+
+        this.historyBuilder = historyBuilder;
+        chatHistory.appendText(historyBuilder.readChatHistory());
+
+    }
+
 }

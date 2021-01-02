@@ -9,9 +9,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ru.JavaLevel2.Lesson7.client.models.ChatHistoryBuilder;
 import ru.JavaLevel2.Lesson7.client.models.ClientChatState;
 import ru.JavaLevel2.Lesson7.client.models.Network;
 
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +31,7 @@ public class ClientChat extends Application {
     private Stage primaryStage;
     private Stage authDialogStage;
 
-
+    private ChatHistoryBuilder historyBuilder;
     private Network network;
     private ViewController viewController;
 
@@ -139,6 +143,9 @@ public class ClientChat extends Application {
     }
 
     public void activeChatDialog(String nickname) {
+        historyBuilder = new ChatHistoryBuilder(nickname);
+        viewController.setHistoryBuilder(historyBuilder);
+        network.setHistoryBuilder(historyBuilder);
         primaryStage.setTitle(nickname);
         state = ClientChatState.CHAT;
         authDialogStage.close();
