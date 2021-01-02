@@ -1,5 +1,6 @@
 package ru.JavaLevel2.Lesson7.server;
 
+import java.io.File;
 import java.sql.*;
 public class DataBaseAuthService implements AuthService {
 
@@ -9,6 +10,7 @@ public class DataBaseAuthService implements AuthService {
     private static PreparedStatement psInsert;
     private static PreparedStatement psUpdate;
     private static PreparedStatement psSelectAllNick;
+    private static PreparedStatement psSelectNicByLoginPass;
 
     private static void prepareAllStatements() throws SQLException {
         psSelect = connection.prepareStatement("SELECT nickname FROM users WHERE login = ? AND password = ?;");
@@ -71,7 +73,7 @@ public class DataBaseAuthService implements AuthService {
             psSelect.setString(2,password);
             ResultSet rs = psSelect.executeQuery();
             while (rs.next()){
-                System.out.println(rs.getString("nickname"));
+                //System.out.println(rs.getString("nickname"));
                 return rs.getString("nickname");
             }
 
@@ -124,29 +126,23 @@ public class DataBaseAuthService implements AuthService {
     @Override
     public int updateUser(String login, String password, String nickname) {
         try {//Блок провеки через подготовленный запрос
-            psUpdate.setString(1,login);
-            psUpdate.setString(2,password);
-            psUpdate.setString(3,nickname);
+            psUpdate.setString(1, nickname);
+            psUpdate.setString(2, login);
+            psUpdate.setString(3, password);
             //System.out.printf("Login: %s\npassword: %s\nNickname: %s\n",login,password,nickname);
+            String oldNicname = getNickByLoginPass(login, password);
 
-           /* ResultSet rs = psSelectAllNick.executeQuery();
-            String dataBaseNick;
-            String dataBaseLogin;
+            File file = null;
+            if (oldNicname != null)
 
-            while (rs.next()){
+                file = new File("src/main/java/ru/JavaLevel2/Lesson7/client/chatHisotory/chathistory_" + oldNicname + ".txt");
+            System.out.println("oldNick = " + oldNicname);
 
-                dataBaseNick = rs.getString("nickname");
-                dataBaseLogin = rs.getString("login");
-                System.out.println("nick: " + dataBaseNick);
-                System.out.println("login: " + dataBaseLogin);
-                if (dataBaseNick.equals(nickname)||dataBaseLogin.equals(login)) {
-                    System.out.printf("Error, Nick or Login exists");
-                    return 0;
-                }
-            }*/
-
-            if(psUpdate.executeUpdate()==1) {
+            if (psUpdate.executeUpdate() == 1) {
                 System.out.println("Update is OK");
+
+                file.renameTo(new File("src/main/java/ru/JavaLevel2/Lesson7/client/chatHisotory/chathistory_" + nickname + ".txt"));
+                file.delete();
                 return 1;
             }
 
@@ -155,9 +151,11 @@ public class DataBaseAuthService implements AuthService {
         } catch (SQLException throwables) {
             System.err.println(throwables);
             throwables.printStackTrace();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
+            return 0;
 
-        return 0;
 
 
     }
