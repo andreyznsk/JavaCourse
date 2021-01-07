@@ -3,6 +3,7 @@ package ru.JavaLevel2.Lesson7.server.Handler;
 import ru.JavaLevel2.Lesson7.ClaintServer.Command;
 import ru.JavaLevel2.Lesson7.ClaintServer.CommandType;
 import ru.JavaLevel2.Lesson7.ClaintServer.commands.AuthCommandData;
+import ru.JavaLevel2.Lesson7.ClaintServer.commands.AuthRegData;
 import ru.JavaLevel2.Lesson7.ClaintServer.commands.PrivateMessageCommandData;
 import ru.JavaLevel2.Lesson7.ClaintServer.commands.PublicMessageCommandData;
 import ru.JavaLevel2.Lesson7.server.MyServer;
@@ -26,22 +27,6 @@ public class ClientHandler {
     private ObjectOutputStream out;
 
     private String nickname;
-
-    /*@Override
-    public void run() {
-        if(nickname==null) {//если логин не получен закрыть соединение
-            try {
-                sendCommand(CloseByTimer());//Посылаем клиенту команду о разрыве соединения по таймеру
-                System.out.println("Закрыаем соединение");
-                closeConnection();
-
-            } catch (IOException e) {
-                System.err.println("Не смогли прервать подключение");
-
-            }
-        }
-
-    }*/
 
     public ClientHandler(MyServer myServer, Socket clientSocket) {
         this.myServer = myServer;
@@ -96,6 +81,30 @@ public class ClientHandler {
                 continue;
             }
 
+            if(command.getType() == CommandType.CREATE_NEW_USER) {
+                AuthRegData data = (AuthRegData) command.getData();
+                String login = data.getLogin();
+                String password = data.getPassword();
+                String nickname = data.getNickname();
+                if (myServer.getAuthService().insertUser(login,password,nickname)==0) {
+                    sendCommand(errorCommand("Такой ник уже есть!!"));
+                    continue;
+                } else sendCommand(confirmationCommand("Регистрация прошла успешно!"));
+            }
+
+            if(command.getType() == CommandType.UPDATE_USER) {
+                AuthRegData data = (AuthRegData) command.getData();
+                String login = data.getLogin();
+                String password = data.getPassword();
+                String nickname = data.getNickname();
+
+                if (myServer.getAuthService().updateUser(login,password,nickname)==0) {
+                    sendCommand(errorCommand("Логин или пароль некорркетны!"));
+                    continue;
+                } else sendCommand(confirmationCommand("Ник успешно изменен."));
+            }
+
+
             if (command.getType() == CommandType.AUTH) {
                 AuthCommandData data = (AuthCommandData) command.getData();
                 String login = data.getLogin();
@@ -107,7 +116,7 @@ public class ClientHandler {
                 }
 
                 if (myServer.isNickBusy(nickname)) {
-                    sendCommand(errorCommand("Такой пользователь уже существует!"));
+                    sendCommand(errorCommand("Такой пользователь уже вошел в чат!"));
                     continue;
                 }
 
@@ -177,7 +186,7 @@ public class ClientHandler {
     }
 
     public void sendMessage(String sender, String message) throws IOException {
-        sendCommand(clientMessageCommand(message, sender));
+        sendCommand(clientMessageCommand(sender, message));
     }
 
     public String getNickname() {

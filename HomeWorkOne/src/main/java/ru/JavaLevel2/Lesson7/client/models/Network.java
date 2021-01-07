@@ -26,6 +26,7 @@ public class Network {
         private Socket socket;
         private ClientChat clientChat;
         private String nickname;
+        private ChatHistoryBuilder historyBuilder;
 
         public Network() {
             this(SERVER_ADDRESS, SERVER_PORT);
@@ -84,7 +85,7 @@ public class Network {
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                   close();
                     System.out.println("Соединение было потеряно!");
                 }
             });
@@ -135,6 +136,7 @@ public class Network {
                     AuthOkCommandData data = (AuthOkCommandData) command.getData();
                     nickname = data.getUsername();
                     Platform.runLater(() -> {
+                        ClientChat.showNetworkConfirmation("Регистрация прошла успешно", "Успешно", null);
                         clientChat.activeChatDialog(nickname);
                     });
                     break;
@@ -148,18 +150,35 @@ public class Network {
                 }
 
 
-                case ERROR:
+                case ERROR: {
                     ErrorCommandData data = (ErrorCommandData) command.getData();
                     Platform.runLater(() -> {
                         ClientChat.showNetworkError(data.getErrorMessage(), "Auth error", null);
                     });
                     break;
+                }
+
+                case CONFIRMATION:
+                    //ErrorCommandData data = (ErrorCommandData) command.getData();
+                    Platform.runLater(() -> {
+                        ClientChat.showNetworkConfirmation("Регистрация прошла успешно", "Успешно", null);
+                    });
+                    break;
+
+                case UPDATE_USER_LIST: {
+                        UpdateUsersListCommandData data = (UpdateUsersListCommandData) command.getData();
+                        Platform.runLater(() -> {
+                            clientChat.updateUsers(data.getUsers());
+                        });
+                        break;
+                    }
                 default:
                     throw new IllegalArgumentException("Uknown command type: " + command.getType());
             }
         }
 
         public void close() {
+            historyBuilder.closeChatHistoryFile();
             try {
                 if (socket != null && socket.isConnected()) {
                     socket.close();
@@ -184,4 +203,19 @@ public class Network {
         public void sendAuthMessage(String login, String password) throws IOException {
             sendCommand(authCommand(login, password));
         }
+
+    public void sendNewUserCommand(String login, String password, String nickname) throws IOException {
+
+            sendCommand(regNewUserCommand(login, password, nickname));
+
     }
+
+    public void sendUpdateUserCommand(String login, String password, String nickname) throws IOException {
+        sendCommand(regUpdateUserCommand(login, password, nickname));
+
+    }
+
+    public void setHistoryBuilder(ChatHistoryBuilder historyBuilder) {
+            this.historyBuilder = historyBuilder;
+    }
+}

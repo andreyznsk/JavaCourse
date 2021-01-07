@@ -10,6 +10,10 @@ public enum CommandType {
     END,
     UPDATE_USER_LIST,
     CLIENT_MESSAGE,
-    CLOSE_BY_TIMER
+    CLOSE_BY_TIMER,
+    REGISTRATION,
+    CREATE_NEW_USER,
+    UPDATE_USER,
+    CONFIRMATION
 
 }
